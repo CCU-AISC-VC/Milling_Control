@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- M-710iD/70 + spindle with the ros2_control block (mock hardware by default).
+     The existing MoveIt config's m710id_70_spindle.urdf.xacro has no <ros2_control> tag, so
+     ros2_control_node throws on it; this file adds the block without touching those packages. -->
+<robot name="m710id_70_spindle" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="initial_positions_file" default="$(find m710id_70_moveit_config)/config/initial_positions.yaml"/>
+  <xacro:include filename="$(find m710id_description_spindle)/urdf/m710id_70.urdf.xacro"/>
+  <xacro:include filename="$(find m710id_70_moveit_config)/config/m710id_70.ros2_control.xacro"/>
+  <xacro:m710id_70/>
+  <xacro:m710id_70_ros2_control name="MockSystem" initial_positions_file="$(arg initial_positions_file)"/>
+</robot>

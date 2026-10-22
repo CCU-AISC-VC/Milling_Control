@@ -1,0 +1,30 @@
+{
+  "session": "outputs/m4_bridge/mock_unit_square",
+  "trajectory": "outputs/m2_ik/unit_square_100mm/trajectory",
+  "label": "mock_unit_square",
+  "speed_scale": 2.0,
+  "n_recorded_in_window": 2002,
+  "record_rate_hz": 100.00963303846062,
+  "max_abs_err_rad_per_joint": [
+    9.3e-05,
+    0.000105,
+    0.000105,
+    0.000693,
+    1.8e-05,
+    0.000532
+  ],
+  "max_abs_err_rad": 0.000693019013202463,
+  "max_abs_err_deg": 0.039707064578822206,
+  "rms_err_rad_per_joint": [
+    4.1e-05,
+    6.9e-05,
+    6.9e-05,
+    0.000101,
+    3e-06,
+    7.8e-05
+  ],
+  "best_time_shift_s": -0.010000000000000009,
+  "max_abs_err_rad_after_shift": 0.00010363679983809576,
+  "gate_rad": 0.001,
+  "pass": true
+}

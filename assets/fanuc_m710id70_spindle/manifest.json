@@ -1,0 +1,23 @@
+{
+  "source_xacro": "ros2_ws/src/m710id_description_spindle/urdf/m710id_70_with_spindle.urdf.xacro",
+  "urdf": "assets/fanuc_m710id70_spindle/m710id_70_spindle.urdf",
+  "mesh_refs_rewritten": 16,
+  "meshes_md5": {
+    "visual/base.stl": "f0295a9a219d51353fa1e3ea44899eef",
+    "visual/j1.stl": "4e7e14fdf811ed10d102676c76ec998a",
+    "visual/j2.stl": "58b29bece77cf90edaea17eb476a3786",
+    "visual/j3.stl": "28ed181a44d32cc3deb99a105de9f995",
+    "visual/j4.stl": "503c4ae8061986db06545dafba0f7522",
+    "visual/j5.stl": "54cee274a5673c00f395fa1aabc44c08",
+    "visual/j6.stl": "35ff6b6ba871d2cfbbb84ab6279514a2",
+    "visual/spindle.stl": "b40e313acf495005edda62257f4d4af1",
+    "collision/base.stl": "5f73ac586d83651258c2408be3f56cdb",
+    "collision/j1.stl": "f2dc5505facee754b7159703e1cf85d0",
+    "collision/j2.stl": "6ba90241c217628d5f3e58afd696daf4",
+    "collision/j3.stl": "70f1f5a77be041679032875e3de1c0e8",
+    "collision/j4.stl": "3313f9e0ff11e704a54ae687ea9d7b62",
+    "collision/j5.stl": "e91ee78471521a64cbcb258775e28a1a",
+    "collision/j6.stl": "8b19829b396843cb2a5f34cce3a7f7f0",
+    "collision/spindle.stl": "b40e313acf495005edda62257f4d4af1"
+  }
+}

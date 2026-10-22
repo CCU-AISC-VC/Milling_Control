@@ -1,0 +1,47 @@
+{
+  "gcode": "assets/gcode/sample_face_boss.nc",
+  "md5": "415a75c8c158a42cd2b3c9c754089131",
+  "n_lines": 71,
+  "n_segments": 62,
+  "segments_by_kind": {
+    "rapid": 10,
+    "linear": 50,
+    "arc_cw": 2,
+    "arc_ccw": 0
+  },
+  "cutting_length_mm": 4803.486677646162,
+  "rapid_length_mm": 783.0044917710634,
+  "bounds_mm": {
+    "min": [
+      0.0,
+      0.0,
+      -5.0
+    ],
+    "max": [
+      185.0,
+      183.0,
+      10.0
+    ]
+  },
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "corner_deg": 5.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "n_samples": 5600,
+  "max_chord_error_mm": 0.002772713088530776,
+  "max_sample_spacing_mm": 1.0000000000000564,
+  "duration_s": 312.17692688202004,
+  "cutting_time_s": 296.01683704659877,
+  "min_dt_s": 0.019284730395996652,
+  "max_interval_speed_mm_min": 3000.000000008215,
+  "max_interval_accel_m_s2": 0.8526324417792871,
+  "warnings": [],
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  }
+}

@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: m710id_description
+    relative_path: robots/m710id_70.xacro
+  srdf:
+    relative_path: config/m710id_70.srdf
+  package_settings:
+    author_name: FANUC corporation
+    author_email: FANUC@todo.todo
+    generated_timestamp: 1754630081
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity

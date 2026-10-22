@@ -1,0 +1,25 @@
+# One FANUC on the floor, a work table in front of it. Frames: docs/SPEC.md §2.
+# `robots` is a list so the same loader builds the two-robot cell (M6).
+name: single_robot_table
+robots:
+  - name: fanuc_1
+    robot: configs/robots/fanuc_m710id70_spindle.yaml
+    base_xyz_m: [0.0, 0.0, 0.0]
+    base_rpy_rad: [0.0, 0.0, 0.0]
+table:
+  # Static box; top face at z = table_top_z. Dimensions are placeholders (UNVERIFIED).
+  center_xy_m: [1.4, 0.0]
+  size_xyz_m: [0.8, 1.0, 0.70]
+  top_z_m: 0.70
+workpiece:
+  # G-code work offset (G54): the program origin, expressed in the robot base frame.
+  # Placeholder; UNVERIFIED. Program X/Y/Z axes are aligned with base X/Y/Z.
+  frame: fanuc_1_base
+  # z = table top (0.70) + stock height (0.05): the origin is the stock's TOP corner and the
+  # stock extends down to the table. (First version had 0.70 and buried the stock in the table.)
+  origin_xyz_m: [1.3, -0.1, 0.75]
+  origin_rpy_rad: [0.0, 0.0, 0.0]
+  stock_size_xyz_mm: [200.0, 200.0, 50.0]  # stock sits on the table top, origin at its top corner
+tool:
+  diameter_mm: 10.0
+  length_from_tcp_mm: 0.0  # TCP is taken at the tool tip

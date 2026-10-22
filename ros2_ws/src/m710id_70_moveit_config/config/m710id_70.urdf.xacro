@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<robot name="m710id_70_spindle" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find m710id_description_spindle)/urdf/m710id_70.urdf.xacro"/>
+  <xacro:m710id_70/>
+</robot>

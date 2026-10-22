@@ -1,0 +1,97 @@
+{
+  "gcode": "assets/gcode/sample_pocket_contour.nc",
+  "gcode_md5": "9bafe0be3460cb1994377296c628161d",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "robot": "fanuc_1",
+  "seed": {
+    "seed": 0,
+    "preferred_state": "home",
+    "n_candidates": 82,
+    "n_converged": 38,
+    "n_with_margin": 38,
+    "dist_to_ref_deg": 59.00127652408248,
+    "limit_margin": 0.2613841853548112,
+    "manipulability": 0.507697911097225,
+    "q0_deg": [
+      -4.444,
+      -3.379,
+      -43.187,
+      0.311,
+      39.808,
+      -0.239
+    ]
+  },
+  "checks": {
+    "ik_pos_err_max_mm": 0.0013785754150727435,
+    "ik_dir_err_max_deg": 0.0011453606908710355,
+    "fk_pos_err_max_mm": 0.0013785754150727435,
+    "fk_dir_err_max_deg": 0.0011453608146584006,
+    "n_not_converged": 0,
+    "iters_mean": 2.1288455680779776,
+    "max_step_deg_per_joint": [
+      0.0672,
+      0.0649,
+      0.068,
+      0.2497,
+      0.0653,
+      0.1915
+    ],
+    "max_step_deg": 0.24971264829476547,
+    "vel_ratio_max_per_joint": [
+      0.018,
+      0.0291,
+      0.0279,
+      0.0552,
+      0.025,
+      0.0301
+    ],
+    "vel_ratio_max": 0.05524117954430202,
+    "acc_ratio_max_per_joint": [
+      0.0803,
+      0.2432,
+      0.1977,
+      0.1706,
+      0.0961,
+      0.0992
+    ],
+    "limit_margin_min": 0.2613841853548112,
+    "manipulability_min": 0.5023034452259066,
+    "q_range_deg": {
+      "min": [
+        -4.44,
+        -3.77,
+        -43.19,
+        -4.22,
+        39.16,
+        -3.17
+      ],
+      "max": [
+        3.37,
+        7.93,
+        -31.64,
+        4.12,
+        40.3,
+        3.23
+      ]
+    },
+    "newton_fk_check": {
+      "n_checked": 206,
+      "pos_err_max_mm": 0.0016781124654060896
+    },
+    "pass": true,
+    "gate": {
+      "pos_mm": 0.05,
+      "dir_deg": 0.05,
+      "max_step_deg": 5.0,
+      "vel_ratio": 1.0
+    }
+  },
+  "ik_time_s": 4.204128408000088,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  },
+  "n_samples": 3283,
+  "duration_s": 240.44306987319698,
+  "trajectory_dir": "outputs/m2_ik/sample_pocket_contour/trajectory"
+}

@@ -1,0 +1,158 @@
+{
+  "gcode": "assets/gcode/sample_face_boss.nc",
+  "gcode_md5": "415a75c8c158a42cd2b3c9c754089131",
+  "cell": "configs/cells/dual_robot_table.yaml",
+  "robot": "fanuc_2",
+  "robot_config": "configs/robots/fanuc_m710id70_spindle.yaml",
+  "urdf": "assets/fanuc_m710id70_spindle/m710id_70_spindle.urdf",
+  "tool_axis_in_tcp": [
+    1.0,
+    0.0,
+    0.0
+  ],
+  "T_base_program": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      1.2
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      -0.1
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.75
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "ik": {
+    "pos_tol": 2e-06,
+    "dir_tol": 2e-05,
+    "max_iters": 60,
+    "lm_lambda": 0.001,
+    "w_pos": 1000.0,
+    "w_dir": 57.29577951308232,
+    "step_max": 0.25,
+    "k_null": 0.2,
+    "limit_margin_frac": 0.02,
+    "min_seed_margin": 0.1
+  },
+  "seed": {
+    "seed": 0,
+    "preferred_state": "home",
+    "n_candidates": 82,
+    "n_converged": 37,
+    "n_with_margin": 37,
+    "dist_to_ref_deg": 63.88118626510099,
+    "limit_margin": 0.21859245605745015,
+    "manipulability": 0.41501268835380245,
+    "q0_deg": [
+      -4.822,
+      -10.291,
+      -49.296,
+      0.378,
+      39.004,
+      -0.294
+    ]
+  },
+  "checks": {
+    "ik_pos_err_max_mm": 0.0017261415870140867,
+    "ik_dir_err_max_deg": 0.001145860679138398,
+    "fk_pos_err_max_mm": 0.0017261415870140867,
+    "fk_dir_err_max_deg": 0.0011458606127726675,
+    "n_not_converged": 0,
+    "iters_mean": 2.557142857142857,
+    "max_step_deg_per_joint": [
+      0.0524,
+      0.0718,
+      0.0652,
+      0.1934,
+      0.0697,
+      0.1492
+    ],
+    "max_step_deg": 0.1933987228361632,
+    "vel_ratio_max_per_joint": [
+      0.019,
+      0.0339,
+      0.0312,
+      0.0619,
+      0.0267,
+      0.0329
+    ],
+    "vel_ratio_max": 0.06192304087710961,
+    "acc_ratio_max_per_joint": [
+      0.088,
+      0.261,
+      0.2177,
+      0.2552,
+      0.1036,
+      0.145
+    ],
+    "limit_margin_min": 0.21859245605745015,
+    "manipulability_min": 0.41048587205363346,
+    "q_range_deg": {
+      "min": [
+        -4.82,
+        -10.7,
+        -49.3,
+        -2.24,
+        38.31,
+        -1.94
+      ],
+      "max": [
+        3.82,
+        2.06,
+        -37.87,
+        2.52,
+        40.24,
+        1.71
+      ]
+    },
+    "newton_fk_check": {
+      "n_checked": 200,
+      "pos_err_max_mm": 0.0016182931418084725
+    },
+    "pass": true,
+    "gate": {
+      "pos_mm": 0.05,
+      "dir_deg": 0.05,
+      "max_step_deg": 5.0,
+      "vel_ratio": 1.0
+    }
+  },
+  "velocity_scale": 0.5,
+  "ik_time_s": 5.616392560999884,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  },
+  "format_version": 1,
+  "created_utc": "2026-10-22T10:44:19+00:00",
+  "joint_names": [
+    "J1",
+    "J2",
+    "J3",
+    "J4",
+    "J5",
+    "J6"
+  ],
+  "n_samples": 5600,
+  "duration_s": 312.17692688202004
+}

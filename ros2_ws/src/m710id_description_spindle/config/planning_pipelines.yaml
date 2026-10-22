@@ -1,0 +1,59 @@
+# MoveIt Planning Pipelines Configuration
+# This file specifies which planning algorithms to use
+
+planning_plugins:
+  - ompl_interface/OMPLPlanner
+  - pilz_industrial_motion_planner/CommandPlanner
+
+# Default pipeline
+default_planning_pipeline: ompl
+
+# OMPL Planning Pipeline
+ompl:
+  planning_plugin: ompl_interface/OMPLPlanner
+  request_adapters: >-
+    default_planning_request_adapters/ResolveConstraintFrames
+    default_planning_request_adapters/ValidateWorkspaceBounds
+    default_planning_request_adapters/CheckStartStateBounds
+    default_planning_request_adapters/CheckStartStateCollision
+  response_adapters: >-
+    default_planning_response_adapters/AddTimeOptimalParameterization
+    default_planning_response_adapters/ValidateSolution
+    default_planning_response_adapters/DisplayMotionPath
+  
+  # OMPL planner configurations for the 'arm' group
+  arm:
+    planner_configs:
+      - RRTConnect
+      - RRTstar
+      - EST
+      - LBKPIECE
+      - BKPIECE
+      - KPIECE
+      - RRT
+      - SBL
+      - STRIDE
+      - PDST
+      - LazyPRM
+      - LazyPRMstar
+    
+    # Default planner for this group
+    default_planner_config: RRTConnect
+    
+    # Planning parameters
+    longest_valid_segment_fraction: 0.005
+    projection_evaluator: joints(J1,J2)
+    enforce_constrained_state_space: true
+
+# Pilz Industrial Motion Planner (for simple motions)
+pilz_industrial_motion_planner:
+  planning_plugin: pilz_industrial_motion_planner/CommandPlanner
+  request_adapters: ""
+  response_adapters: >-
+    default_planning_response_adapters/AddTimeOptimalParameterization
+    default_planning_response_adapters/ValidateSolution
+  
+  # Pilz supports: PTP, LIN, CIRC commands
+  capabilities: >-
+    pilz_industrial_motion_planner/MoveGroupSequenceAction
+    pilz_industrial_motion_planner/MoveGroupSequenceService

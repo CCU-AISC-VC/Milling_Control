@@ -1,0 +1,56 @@
+{
+  "trajectory": "outputs/m2_ik/sample_pocket_contour/trajectory",
+  "gcode": "assets/gcode/sample_pocket_contour.nc",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "robot": "fanuc_1",
+  "checks": {
+    "n_frames": 14427,
+    "sim_hz": 60.0,
+    "replay_time_s": 32.92396220799992,
+    "tcp_err_max_mm": 0.0012327139110745087,
+    "tcp_err_mean_mm": 0.00026958728003746414,
+    "n_unexpected_collision_frames": 0,
+    "unexpected_first": [],
+    "spindle_stock_min_mm": -2.0010185724771596,
+    "programmed_max_depth_mm": 6.000641999999945,
+    "mesh_tip_offset_mm": 4.0,
+    "expected_deepest_mm": -2.000641999999945,
+    "other_pairs_min_mm": 47.99889613745255,
+    "pair_min_mm": {
+      "fanuc_1/J4_link | stock": 128.731,
+      "fanuc_1/J4_link | table": 140.057,
+      "fanuc_1/J5_link | stock": 97.373,
+      "fanuc_1/J5_link | table": 127.434,
+      "fanuc_1/J6_link | stock": 101.497,
+      "fanuc_1/J6_link | table": 151.497,
+      "fanuc_1/spindle_link | stock": -2.001,
+      "fanuc_1/spindle_link | table": 47.999
+    },
+    "pass": true,
+    "gate": {
+      "tcp_err_mm": 0.1,
+      "unexpected": 0,
+      "depth_tol_mm": 1.0,
+      "penetration_tol_mm": 0.05
+    }
+  },
+  "media": {
+    "usd": "outputs/m3_sim/sample_pocket_contour/scene.usd",
+    "usd_frames": 723,
+    "overview": {
+      "mp4": "outputs/m3_sim/sample_pocket_contour/replay_overview.mp4",
+      "gif": "outputs/m3_sim/sample_pocket_contour/replay_overview.gif",
+      "frames": 723
+    },
+    "closeup": {
+      "mp4": "outputs/m3_sim/sample_pocket_contour/replay_closeup.mp4",
+      "gif": "outputs/m3_sim/sample_pocket_contour/replay_closeup.gif",
+      "frames": 723
+    }
+  },
+  "video_speed": 10.0,
+  "env": {
+    "python": "3.12.15",
+    "newton": "1.7.0.dev0"
+  }
+}

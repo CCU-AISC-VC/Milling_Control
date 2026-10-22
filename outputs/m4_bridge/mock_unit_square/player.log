@@ -1,0 +1,7 @@
+[INFO] [1792665103.422623859] [trajectory_player]: trajectory /mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m2_ik/unit_square_100mm/trajectory: 401 points, 40.0 s programmed, 20.0 s at speed_scale 2.0; joints ['J1', 'J2', 'J3', 'J4', 'J5', 'J6']; gcode assets/gcode/unit_square_100mm.nc md5 239f02f4
+[INFO] [1792665103.661515462] [trajectory_player]: move_to_start: max joint delta 43.19 deg over 3.8 s
+[INFO] [1792665103.661790758] [trajectory_player]: event approach_sent: {'duration': 3.7688122849999997}
+[INFO] [1792665107.463357969] [trajectory_player]: result error_code 0 'Goal successfully reached!'
+[INFO] [1792665107.464781834] [trajectory_player]: event main_sent: {'n_points': 401, 'duration': 20.52, 'speed_scale': 2.0, 'trajectory_dir': '/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m2_ik/unit_square_100mm/trajectory'}
+[INFO] [1792665128.016717852] [trajectory_player]: result error_code 0 'Goal successfully reached!'
+[INFO] [1792665128.016943300] [trajectory_player]: event main_done: {'error_code': 0}

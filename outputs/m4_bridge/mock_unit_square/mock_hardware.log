@@ -1,0 +1,80 @@
+[INFO] [launch]: All log files can be found below /home/vc-zephyrus/.ros/log/2026-10-22-18-31-39-565716-VC-zephyrus-20861
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [20871]
+[INFO] [ros2_control_node-2]: process started with pid [20872]
+[INFO] [spawner-3]: process started with pid [20873]
+[INFO] [spawner-4]: process started with pid [20874]
+[robot_state_publisher-1] [INFO] [1792665099.691027426] [robot_state_publisher]: Robot initialized
+[ros2_control_node-2] [INFO] [1792665099.695105394] [controller_manager]: Using Steady (Monotonic) clock for triggering controller manager cycles.
+[ros2_control_node-2] [INFO] [1792665099.697086968] [controller_manager]: Subscribing to '/robot_description' topic for robot description.
+[ros2_control_node-2] [INFO] [1792665099.698523219] [controller_manager]: update rate is 100 Hz
+[ros2_control_node-2] [INFO] [1792665099.698536344] [controller_manager]: Overruns handling is : enabled
+[ros2_control_node-2] [INFO] [1792665099.698539820] [controller_manager]: Spawning controller_manager RT thread with scheduler priority: 50
+[ros2_control_node-2] [WARN] [1792665099.698580834] [controller_manager]: Could not enable FIFO RT scheduling policy: with error number <1>(Operation not permitted). See [https://control.ros.org/master/doc/ros2_control/controller_manager/doc/userdoc.html] for details on how to enable realtime scheduling.
+[spawner-3] [INFO] [1792665099.873169309] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[ros2_control_node-2] [INFO] [1792665099.877343719] [controller_manager]: Received robot description from topic.
+[ros2_control_node-2] [INFO] [1792665099.877377067] [controller_manager]: Enforcing command limits is disabled. Command limits from URDF will be ignored.
+[ros2_control_node-2] [INFO] [1792665099.878870060] [controller_manager]: Loading hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665099.879183291] [controller_manager]: Loaded hardware 'MockSystem' from plugin 'mock_components/GenericSystem'
+[ros2_control_node-2] [INFO] [1792665099.879239792] [controller_manager]: Initialize hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665099.882450135] [controller_manager]: Successful initialization of hardware 'MockSystem'
+[ros2_control_node-2] [INFO] [1792665099.882589265] [controller_manager]: Activating component 'MockSystem'.
+[ros2_control_node-2] [INFO] [1792665099.882602325] [resource_manager]: 'configure' hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665099.882611892] [resource_manager]: Successful 'configure' of hardware 'MockSystem'
+[ros2_control_node-2] [INFO] [1792665099.882616273] [resource_manager]: 'activate' hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665099.882622234] [resource_manager]: Successful 'activate' of hardware 'MockSystem'
+[ros2_control_node-2] [INFO] [1792665099.882677843] [controller_manager]: Registering statistics for : MockSystem
+[ros2_control_node-2] [INFO] [1792665099.882725703] [controller_manager]: Resource Manager has been successfully initialized. Starting Controller Manager services...
+[ros2_control_node-2] [INFO] [1792665100.125407818] [controller_manager]: Loading controller : 'joint_state_broadcaster' of type 'joint_state_broadcaster/JointStateBroadcaster'
+[ros2_control_node-2] [INFO] [1792665100.125444824] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2_control_node-2] [INFO] [1792665100.127213954] [controller_manager]: Controller 'joint_state_broadcaster' node arguments: --ros-args --params-file /tmp/launch_params_lf4bucd9 --params-file /mnt/Robotics/Github_Dev_workspace/Milling_Control/ros2_ws/install/m710id_70_moveit_config/share/m710id_70_moveit_config/config/ros2_controllers.yaml --params-file /tmp/launch_params_mgj5xyfw 
+[spawner-3] [INFO] [1792665100.140147638] [spawner_joint_state_broadcaster]: Loaded joint_state_broadcaster
+[ros2_control_node-2] [INFO] [1792665100.140658965] [controller_manager]: Configuring controller: 'joint_state_broadcaster'
+[ros2_control_node-2] [INFO] [1792665100.140748757] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2_control_node-2] [INFO] [1792665100.149873001] [controller_manager]: Activating controllers: [ joint_state_broadcaster ]
+[ros2_control_node-2] [INFO] [1792665100.158984676] [controller_manager]: Successfully switched controllers!
+[spawner-3] [INFO] [1792665100.169878663] [spawner_joint_state_broadcaster]: Configured and activated joint_state_broadcaster
+[spawner-4] [INFO] [1792665100.225626406] [spawner_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
+[INFO] [spawner-3]: process has finished cleanly [pid 20873]
+[ros2_control_node-2] [INFO] [1792665100.558876302] [controller_manager]: Loading controller : 'arm_controller' of type 'joint_trajectory_controller/JointTrajectoryController'
+[ros2_control_node-2] [INFO] [1792665100.558924118] [controller_manager]: Loading controller 'arm_controller'
+[ros2_control_node-2] [INFO] [1792665100.560068679] [controller_manager]: Controller 'arm_controller' node arguments: --ros-args --params-file /tmp/launch_params_lf4bucd9 --params-file /mnt/Robotics/Github_Dev_workspace/Milling_Control/ros2_ws/install/m710id_70_moveit_config/share/m710id_70_moveit_config/config/ros2_controllers.yaml --params-file /tmp/launch_params_mgj5xyfw 
+[spawner-4] [INFO] [1792665100.569627750] [spawner_arm_controller]: Loaded arm_controller
+[ros2_control_node-2] [INFO] [1792665100.570108151] [controller_manager]: Configuring controller: 'arm_controller'
+[ros2_control_node-2] [INFO] [1792665100.570223811] [arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[ros2_control_node-2] [INFO] [1792665100.570240398] [arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[ros2_control_node-2] [INFO] [1792665100.570273662] [arm_controller]: Using 'splines' interpolation method.
+[ros2_control_node-2] [INFO] [1792665100.571369284] [arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2_control_node-2] [INFO] [1792665100.573200140] [arm_controller]: Setting initial scaling factor to 1.000000
+[ros2_control_node-2] [INFO] [1792665100.573211702] [arm_controller]: No scaling interface set. This controller will not read speed scaling from the hardware.
+[ros2_control_node-2] [INFO] [1792665100.660236198] [controller_manager]: Activating controllers: [ arm_controller ]
+[ros2_control_node-2] [INFO] [1792665100.669073588] [controller_manager]: Successfully switched controllers!
+[spawner-4] [INFO] [1792665100.680263794] [spawner_arm_controller]: Configured and activated arm_controller
+[INFO] [spawner-4]: process has finished cleanly [pid 20874]
+[ros2_control_node-2] [INFO] [1792665103.662183104] [arm_controller]: Received new action goal
+[ros2_control_node-2] [INFO] [1792665103.662223435] [arm_controller]: Accepted new action goal
+[ros2_control_node-2] [INFO] [1792665107.428910033] [arm_controller]: Goal reached, success!
+[ros2_control_node-2] [INFO] [1792665107.465774901] [arm_controller]: Received new action goal
+[ros2_control_node-2] [INFO] [1792665107.465821994] [arm_controller]: Accepted new action goal
+[ros2_control_node-2] [INFO] [1792665127.988864162] [arm_controller]: Goal reached, success!
+[ros2_control_node-2] [INFO] [1792665130.229322708] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-2] [INFO] [1792665130.229401052] [controller_manager]: Shutdown request received....
+[ros2_control_node-2] [INFO] [1792665130.229429135] [controller_manager]: Shutting down all controllers in the controller manager.
+[ros2_control_node-2] [INFO] [1792665130.229443863] [controller_manager]: Deactivating controller 'arm_controller'
+[robot_state_publisher-1] [INFO] [1792665130.229381469] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ros2_control_node-2] [INFO] [1792665130.229480310] [controller_manager]: Shutting down controller 'arm_controller'
+[ros2_control_node-2] [INFO] [1792665130.229580918] [controller_manager]: Deactivating controller 'joint_state_broadcaster'
+[ros2_control_node-2] [INFO] [1792665130.229597763] [controller_manager]: Shutting down controller 'joint_state_broadcaster'
+[ros2_control_node-2] [INFO] [1792665130.229620136] [resource_manager]: 'deactivate' hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665130.229628155] [resource_manager]: Successful 'deactivate' of hardware 'MockSystem'
+[ros2_control_node-2] [INFO] [1792665130.229630201] [resource_manager]: 'shutdown' hardware 'MockSystem' 
+[ros2_control_node-2] [INFO] [1792665130.229631854] [resource_manager]: Successful 'shutdown' of hardware 'MockSystem'
+[ros2_control_node-2] [INFO] [1792665130.229659913] [controller_manager]: Shutting down the controller manager.
+[ros2_control_node-2] [ERROR] [1792665130.229756804] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-2] [ERROR] [1792665130.229756319] [controller_manager.pal_statistics]: Exception in publisher thread: context cannot be slept with because it's invalid!. Aborting!
+[ros2_control_node-2] [INFO] [1792665130.239194361] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-2] [INFO] [1792665130.239228359] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[ros2_control_node-2] [INFO] [1792665130.240948037] [controller_manager.pal_statistics]: Async messages lost 0
+[ros2_control_node-2] [INFO] [1792665130.240970684] [controller_manager.pal_statistics]: publish_async_failures_ 0
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 20871]
+[INFO] [ros2_control_node-2]: process has finished cleanly [pid 20872]

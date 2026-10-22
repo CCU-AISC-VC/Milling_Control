@@ -1,0 +1,20 @@
+[
+  {
+    "event": "approach_sent",
+    "stamp": 1792665103.6615865,
+    "duration": 3.7688122849999997
+  },
+  {
+    "event": "main_sent",
+    "stamp": 1792665107.464528,
+    "n_points": 401,
+    "duration": 20.52,
+    "speed_scale": 2.0,
+    "trajectory_dir": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m2_ik/unit_square_100mm/trajectory"
+  },
+  {
+    "event": "main_done",
+    "stamp": 1792665128.016759,
+    "error_code": 0
+  }
+]

@@ -1,0 +1,26 @@
+# FANUC M-710iD/70 with the lab's spindle. Source of truth for the kinematic model is the
+# flattened URDF; this file holds what the URDF does not say. See docs/SPEC.md §3.
+name: fanuc_m710id70_spindle
+urdf: assets/fanuc_m710id70_spindle/m710id_70_spindle.urdf
+base_link: base_link
+tcp_link: spindle_tcp
+flange_link: flange
+joint_names: [J1, J2, J3, J4, J5, J6]
+# Cutter axis expressed in the spindle_tcp frame, pointing from the spindle body toward the
+# tool tip. Inferred from the spindle mesh (long axis) and the TCP offset; UNVERIFIED on the
+# real controller (UTOOL). See SPEC §3.2.
+tool_axis_in_tcp: [1.0, 0.0, 0.0]
+# The spindle collision/visual mesh ends 4 mm short of the TCP along the tool axis (mesh +X max
+# 0.166 m vs TCP x 0.170 m in spindle_link). Collision checks use it to predict penetration.
+mesh_tip_offset_mm: 4.0
+# Named joint states (rad), copied from the SRDF
+named_states:
+  home: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  ready: [0.0, -0.785, 0.785, 0.0, -1.5708, 0.0]
+# Posture the IK keeps close to (seed choice and the free rotation about the cutter axis).
+# "home" = straight wrist (J4 = J6 = 0), which is what we want for milling.
+preferred_state: home
+# Fraction of the URDF velocity limit allowed during milling (safety margin; SPEC §3.4)
+velocity_scale: 0.5
+# Joint acceleration limits (rad/s^2). The URDF has none; placeholder, UNVERIFIED.
+acceleration_limits_rad_s2: [3.0, 3.0, 3.0, 6.0, 6.0, 8.0]

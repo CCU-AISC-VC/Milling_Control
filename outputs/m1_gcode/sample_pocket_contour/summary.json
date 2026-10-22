@@ -1,0 +1,47 @@
+{
+  "gcode": "assets/gcode/sample_pocket_contour.nc",
+  "md5": "9bafe0be3460cb1994377296c628161d",
+  "n_lines": 59,
+  "n_segments": 50,
+  "segments_by_kind": {
+    "rapid": 8,
+    "linear": 22,
+    "arc_cw": 1,
+    "arc_ccw": 19
+  },
+  "cutting_length_mm": 2804.107631628109,
+  "rapid_length_mm": 463.0936698021878,
+  "bounds_mm": {
+    "min": [
+      0.0,
+      0.0,
+      -6.0
+    ],
+    "max": [
+      180.0,
+      180.0,
+      10.0
+    ]
+  },
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "corner_deg": 5.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "n_samples": 3283,
+  "max_chord_error_mm": 0.0124307878107896,
+  "max_sample_spacing_mm": 1.0000000000000286,
+  "duration_s": 240.44306987319698,
+  "cutting_time_s": 230.78119647715314,
+  "min_dt_s": 0.019489466353859286,
+  "max_interval_speed_mm_min": 3000.0000000033006,
+  "max_interval_accel_m_s2": 0.845992001854429,
+  "warnings": [],
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  }
+}

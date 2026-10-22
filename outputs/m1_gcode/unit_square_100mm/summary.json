@@ -1,0 +1,47 @@
+{
+  "gcode": "assets/gcode/unit_square_100mm.nc",
+  "md5": "239f02f4cf8d07607e02a31fd3a22b35",
+  "n_lines": 6,
+  "n_segments": 4,
+  "segments_by_kind": {
+    "rapid": 0,
+    "linear": 4,
+    "arc_cw": 0,
+    "arc_ccw": 0
+  },
+  "cutting_length_mm": 400.0,
+  "rapid_length_mm": 0.0,
+  "bounds_mm": {
+    "min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "max": [
+      100.0,
+      100.0,
+      0.0
+    ]
+  },
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "corner_deg": 5.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "n_samples": 401,
+  "max_chord_error_mm": 0.0,
+  "max_sample_spacing_mm": 1.0000000000000147,
+  "duration_s": 40.039999986722535,
+  "cutting_time_s": 40.039999986722535,
+  "min_dt_s": 0.09999999999999432,
+  "max_interval_speed_mm_min": 600.0000000000347,
+  "max_interval_accel_m_s2": 0.004645760743322439,
+  "warnings": [],
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  }
+}

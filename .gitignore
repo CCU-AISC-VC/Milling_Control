@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# ROS 2 colcon outputs (rebuild with `colcon build` inside ros2_ws/)
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+
+# Scratch runs, logs, raw arrays and large per-frame products; curated results stay in outputs/<stage>/
+outputs/_scratch/
+outputs/**/logs/
+outputs/**/raw/
+outputs/**/*.mp4
+outputs/**/*.usd
+outputs/**/*.usda
+outputs/**/*.usdc
+outputs/**/*.viser
+# Isaac Sim per-frame renders (hundreds of MB); keep render_mid/last PNGs and the MP4 link
+outputs/**/frames/
+
+# Real-robot recordings are large; commit only summaries (see docs/instructions.md)
+sessions/**/*.mp4
+sessions/**/*.bag
+sessions/**/*.db3
+sessions/**/*.mcap
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

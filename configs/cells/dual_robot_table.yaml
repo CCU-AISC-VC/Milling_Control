@@ -1,0 +1,73 @@
+# M6: two M-710iD/70 facing each other across one table, machining opposite ends of a shared
+# 600 x 200 x 50 mm stock. Positions are placeholders (UNVERIFIED). Frames: docs/SPEC.md §2.
+name: dual_robot_table
+robots:
+  - name: fanuc_1
+    robot: configs/robots/fanuc_m710id70_spindle.yaml
+    base_xyz_m: [0.0, 0.0, 0.0]
+    base_rpy_rad: [0.0, 0.0, 0.0]
+  - name: fanuc_2
+    robot: configs/robots/fanuc_m710id70_spindle.yaml
+    base_xyz_m: [3.0, 0.0, 0.0]
+    base_rpy_rad: [0.0, 0.0, 3.141592653589793]
+table:
+  center_xy_m: [1.5, 0.0]
+  size_xyz_m: [1.0, 1.2, 0.70]
+  top_z_m: 0.70
+# Physical stock(s): origin = TOP corner, box extends +X, +Y and down (-Z) in its frame.
+stocks:
+  - name: stock
+    frame: world
+    origin_xyz_m: [1.2, -0.1, 0.75]
+    origin_rpy_rad: [0.0, 0.0, 0.0]
+    size_xyz_mm: [600.0, 200.0, 50.0]
+# One G-code program frame per robot. Each covers 0..200 mm from its own end of the stock;
+# the middle 200 mm stays uncut so the spindle bodies (about 0.09 m beyond the tool axis
+# toward the other robot) keep clearance when both work at their inner edges.
+programs:
+  fanuc_1:
+    frame: world
+    origin_xyz_m: [1.2, -0.1, 0.75]
+    origin_rpy_rad: [0.0, 0.0, 0.0]
+  fanuc_2:
+    frame: world
+    origin_xyz_m: [1.8, 0.1, 0.75]
+    origin_rpy_rad: [0.0, 0.0, 3.141592653589793]
+# Backward-compatible single workpiece (used by scripts that only know one program frame)
+workpiece:
+  frame: world
+  origin_xyz_m: [1.2, -0.1, 0.75]
+  origin_rpy_rad: [0.0, 0.0, 0.0]
+  stock_size_xyz_mm: [600.0, 200.0, 50.0]
+tool:
+  diameter_mm: 10.0
+  length_from_tcp_mm: 0.0
+environment:
+  floor:
+    center_xy_m: [1.5, 0.0]
+    size_xy_m: [9.0, 7.0]
+    thickness_m: 0.02
+    top_z_m: -0.002
+    color: [0.22, 0.23, 0.25]
+  fence:
+    rect_xy_m: [[-1.7, -2.4], [4.7, 2.4]]
+    height_m: 2.0
+    post_size_m: 0.07
+    post_spacing_m: 1.6
+    panel_thickness_m: 0.02
+    panel_bottom_gap_m: 0.12
+    gates:
+      - {side: "-y", center_m: 1.5, width_m: 1.4}
+    colors:
+      post: [1.0, 0.78, 0.05]
+      panel: [0.12, 0.13, 0.16]
+    panel_opacity: 0.35
+  boxes:
+    - {name: cabinet_1, center_m: [-1.0, 2.9, 0.9], size_m: [0.8, 0.5, 1.8], color: [0.60, 0.62, 0.66]}
+    - {name: cabinet_2, center_m: [4.0, 2.9, 0.9], size_m: [0.8, 0.5, 1.8], color: [0.60, 0.62, 0.66]}
+    - {name: pedestal_1, center_m: [0.0, 0.0, -0.01], size_m: [0.9, 0.9, 0.02], color: [0.35, 0.36, 0.38]}
+    - {name: pedestal_2, center_m: [3.0, 0.0, -0.01], size_m: [0.9, 0.9, 0.02], color: [0.35, 0.36, 0.38]}
+cameras:
+  overview: {pos: [5.8, -6.2, 4.2], target: [1.5, 0.0, 0.8]}
+  closeup: {pos: [1.5, -2.3, 1.75], target: [1.5, 0.0, 0.78]}
+  side: {pos: [-2.8, -4.0, 2.2], target: [1.5, 0.0, 0.8]}

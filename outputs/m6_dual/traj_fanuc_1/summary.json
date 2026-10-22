@@ -1,0 +1,97 @@
+{
+  "gcode": "assets/gcode/sample_pocket_contour.nc",
+  "gcode_md5": "9bafe0be3460cb1994377296c628161d",
+  "cell": "configs/cells/dual_robot_table.yaml",
+  "robot": "fanuc_1",
+  "seed": {
+    "seed": 0,
+    "preferred_state": "home",
+    "n_candidates": 82,
+    "n_converged": 37,
+    "n_with_margin": 37,
+    "dist_to_ref_deg": 63.88118626510099,
+    "limit_margin": 0.21859245605745015,
+    "manipulability": 0.41501268835380256,
+    "q0_deg": [
+      -4.822,
+      -10.291,
+      -49.296,
+      0.378,
+      39.004,
+      -0.294
+    ]
+  },
+  "checks": {
+    "ik_pos_err_max_mm": 0.0016555019136942298,
+    "ik_dir_err_max_deg": 0.0011458691574362753,
+    "fk_pos_err_max_mm": 0.0016555019136942298,
+    "fk_dir_err_max_deg": 0.0011458701548547837,
+    "n_not_converged": 0,
+    "iters_mean": 2.0088333840999084,
+    "max_step_deg_per_joint": [
+      0.0721,
+      0.0704,
+      0.0651,
+      0.2487,
+      0.0709,
+      0.1901
+    ],
+    "max_step_deg": 0.24874271604335638,
+    "vel_ratio_max_per_joint": [
+      0.0195,
+      0.0316,
+      0.0266,
+      0.0575,
+      0.0268,
+      0.0316
+    ],
+    "vel_ratio_max": 0.05751556504543823,
+    "acc_ratio_max_per_joint": [
+      0.0872,
+      0.2609,
+      0.1963,
+      0.1779,
+      0.1056,
+      0.1043
+    ],
+    "limit_margin_min": 0.21859245605745015,
+    "manipulability_min": 0.41048587205363335,
+    "q_range_deg": {
+      "min": [
+        -4.82,
+        -10.7,
+        -49.3,
+        -4.36,
+        38.31,
+        -3.19
+      ],
+      "max": [
+        3.62,
+        1.82,
+        -38.26,
+        4.17,
+        40.29,
+        3.37
+      ]
+    },
+    "newton_fk_check": {
+      "n_checked": 206,
+      "pos_err_max_mm": 0.001338370701481368
+    },
+    "pass": true,
+    "gate": {
+      "pos_mm": 0.05,
+      "dir_deg": 0.05,
+      "max_step_deg": 5.0,
+      "vel_ratio": 1.0
+    }
+  },
+  "ik_time_s": 3.262624863000383,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  },
+  "n_samples": 3283,
+  "duration_s": 240.44306987319698,
+  "trajectory_dir": "outputs/m6_dual/traj_fanuc_1/trajectory"
+}
