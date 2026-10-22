@@ -44,6 +44,13 @@ class JointTrajectory:
     def qdd(self) -> np.ndarray:
         return np.gradient(self.qd(), self.t, axis=0)
 
+    def tool_dirs(self, tool_axis_in_tcp) -> np.ndarray:
+        """Per-sample tool axis (spindle -> tip) in the base frame from the stored TCP orientation."""
+        from scipy.spatial.transform import Rotation as R
+
+        a = np.asarray(tool_axis_in_tcp, dtype=float)
+        return R.from_quat(self.tcp_quat_xyzw).apply(a)
+
     def interp_q(self, t: np.ndarray) -> np.ndarray:
         t = np.clip(np.asarray(t, dtype=float), self.t[0], self.t[-1])
         return np.stack([np.interp(t, self.t, self.q[:, j]) for j in range(self.q.shape[1])], axis=1)

@@ -1,0 +1,76 @@
+{
+  "name": "ccu_emblem",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "material": {
+    "name": "aluminium_6061",
+    "k_c_N_mm2": 700.0,
+    "radial_ratio": 0.4,
+    "axial_ratio": 0.25
+  },
+  "stock_mm": {
+    "size": [
+      200.0,
+      200.0,
+      50.0
+    ],
+    "center_world": [
+      1.4,
+      0.0,
+      0.725
+    ]
+  },
+  "heightmap": {
+    "resolution_mm": 0.25,
+    "nx": 800,
+    "ny": 800
+  },
+  "removed_volume_total_mm3": 8933.881282806396,
+  "max_depth_mm": 0.8002519607543945,
+  "robots": {
+    "fanuc_1": {
+      "tool": {
+        "name": "ball_2mm",
+        "type": "ball",
+        "diameter_mm": 2.0,
+        "flute_length_mm": 6.0,
+        "length_from_nose_mm": 45.0,
+        "shank_diameter_mm": 4.0,
+        "flutes": 2,
+        "max_rpm": 24000.0,
+        "config": null
+      },
+      "removed_volume_mm3": 8933.882206248336,
+      "cutting_time_s": 576.2924158899993,
+      "mrr_max_mm3_s": 24.273021234486027,
+      "mrr_mean_cutting_mm3_s": 15.728674657191927,
+      "force_max_N": 11.95986927486923,
+      "force_mean_cutting_N": 7.758547096718561,
+      "deflection_max_mm": 0.03633019220818954,
+      "deflection_z_max_mm": 0.029919327548414223,
+      "joint_torque_max_Nm": [
+        14.417,
+        5.567,
+        11.43,
+        0.074,
+        3.254,
+        2.166
+      ],
+      "joint_stiffness_Nm_rad": [
+        800000.0,
+        800000.0,
+        600000.0,
+        200000.0,
+        200000.0,
+        100000.0
+      ]
+    }
+  },
+  "trajectories": {
+    "fanuc_1": "outputs/m2_ik/ccu_emblem/trajectory"
+  },
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "warp": "1.17.0"
+  }
+}

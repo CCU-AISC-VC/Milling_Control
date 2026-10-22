@@ -166,3 +166,37 @@ class SamplerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FiveAxisTests(unittest.TestCase):
+    def test_tool_vector_parsing_and_slerp(self):
+        txt = "G21 G90\nG0 Z10 I0 J0 K1\nG0 X0 Y0\nG1 Z0 F600\nG1 X100 Y0 I0.5 J0 K0.8660254\nG2 X110 Y10 I0 J10\n"
+        prog = parse_gcode(txt)
+        self.assertTrue(prog.five_axis)
+        # segments: [0] G0 Z10 (axis K1), [1] G1 Z0, [2] tilted G1, [3] G2  (G0 X0 Y0 has zero length)
+        seg = prog.segments[2]  # the tilted G1
+        np.testing.assert_allclose(seg.axis_start, [0, 0, 1], atol=1e-12)
+        np.testing.assert_allclose(seg.axis_end, [0.5, 0, 0.8660254], atol=1e-6)
+        arc = prog.segments[3]  # G2 keeps I/J as the centre, axis stays modal
+        self.assertEqual(arc.kind, "arc_cw")
+        np.testing.assert_allclose(arc.center / MM, [100, 10, 0], atol=1e-9)
+        np.testing.assert_allclose(arc.axis_end, [0.5, 0, 0.8660254], atol=1e-6)
+        tp = sample_program(prog, SamplingParams(max_spacing=10e-3))
+        # tool_dir (spindle -> tip) is -axis; it rotates smoothly from vertical to 30 deg tilt
+        m = tp.segment == 2
+        tilt = np.degrees(np.arccos(np.clip(-tp.tool_dir[m, 2], -1, 1)))
+        self.assertLess(tilt[0], 3.0)  # first sample of the segment (the start point belongs to the previous segment)
+        self.assertAlmostEqual(tilt[-1], 30.0, places=4)
+        self.assertTrue(np.all(np.diff(tilt) > 0))
+        np.testing.assert_allclose(np.linalg.norm(tp.tool_dir, axis=1), 1.0, atol=1e-9)
+
+    def test_sample_5axis_program(self):
+        from milling_sim.sample_gcode import make_sample_5axis_wave
+
+        prog = parse_gcode(make_sample_5axis_wave())
+        self.assertTrue(prog.five_axis)
+        self.assertEqual(prog.warnings, [])
+        tp = sample_program(prog)
+        tilt = np.degrees(np.arccos(np.clip(-tp.tool_dir[:, 2], -1, 1)))
+        self.assertLess(tilt.max(), 30.0)
+        self.assertGreater(tilt.max(), 15.0)

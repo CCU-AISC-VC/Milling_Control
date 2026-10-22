@@ -1,0 +1,47 @@
+{
+  "gcode": "assets/gcode/ccu_emblem.nc",
+  "md5": "1f83a7cdf5952c115f0e1b1556185ead",
+  "n_lines": 3247,
+  "n_segments": 3242,
+  "segments_by_kind": {
+    "rapid": 502,
+    "linear": 2740,
+    "arc_cw": 0,
+    "arc_ccw": 0
+  },
+  "cutting_length_mm": 11064.498232389815,
+  "rapid_length_mm": 6222.94928219178,
+  "bounds_mm": {
+    "min": [
+      0.0,
+      0.0,
+      -0.8
+    ],
+    "max": [
+      179.917,
+      176.167,
+      5.0
+    ]
+  },
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "corner_deg": 5.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "n_samples": 19080,
+  "max_chord_error_mm": 2.482822974991805e-14,
+  "max_sample_spacing_mm": 1.0000000000000147,
+  "duration_s": 968.1430768902806,
+  "cutting_time_s": 818.5840912464348,
+  "min_dt_s": 0.016568059141150115,
+  "max_interval_speed_mm_min": 3000.0000000168,
+  "max_interval_accel_m_s2": 0.9632550343728911,
+  "warnings": [],
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  }
+}

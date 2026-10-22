@@ -1,0 +1,68 @@
+{
+  "trajectory": "outputs/m2_ik/ccu_emblem/trajectory",
+  "gcode": "assets/gcode/ccu_emblem.nc",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "robot": "fanuc_1",
+  "checks": {
+    "n_frames": 58089,
+    "sim_hz": 60.0,
+    "replay_time_s": 122.17584210099812,
+    "tcp_err_max_mm": 0.0011058165112619322,
+    "tcp_err_mean_mm": 0.0002629213000316958,
+    "n_unexpected_collision_frames": 0,
+    "unexpected_first": [],
+    "spindle_stock_min_mm": -0.800652500243082,
+    "programmed_max_depth_mm": 0.800594913311576,
+    "expected_deepest_mm": -0.800594913311576,
+    "tool": {
+      "name": "ball_2mm",
+      "type": "ball",
+      "diameter_mm": 2.0,
+      "flute_length_mm": 6.0,
+      "length_from_nose_mm": 45.0,
+      "shank_diameter_mm": 4.0,
+      "flutes": 2,
+      "max_rpm": 24000.0,
+      "config": "configs/tools/ball_2mm.yaml"
+    },
+    "other_pairs_min_mm": 98.19896231074544,
+    "robot_env_min_mm": null,
+    "pair_min_mm": {
+      "fanuc_1/J4_link | stock": 170.499,
+      "fanuc_1/J4_link | table": 190.417,
+      "fanuc_1/J5_link | stock": 145.553,
+      "fanuc_1/J5_link | table": 177.923,
+      "fanuc_1/J6_link | stock": 151.697,
+      "fanuc_1/spindle_link | stock": 48.199,
+      "fanuc_1/spindle_link | table": 98.199,
+      "fanuc_1/tool | stock": -0.801,
+      "fanuc_1/tool | table": 49.199
+    },
+    "penetration_tol_mm": 0.05,
+    "pass": true,
+    "gate": {
+      "tcp_err_mm": 0.1,
+      "unexpected": 0,
+      "depth_tol_mm": 1.0
+    }
+  },
+  "media": {
+    "usd": "outputs/m3_sim/ccu_emblem/scene.usd",
+    "usd_frames": 1454,
+    "overview": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/replay_overview.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/replay_overview.gif",
+      "frames": 1454
+    },
+    "closeup": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/replay_closeup.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/replay_closeup.gif",
+      "frames": 1454
+    }
+  },
+  "video_speed": 20.0,
+  "env": {
+    "python": "3.12.15",
+    "newton": "1.7.0.dev0"
+  }
+}

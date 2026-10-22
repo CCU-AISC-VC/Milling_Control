@@ -1,0 +1,91 @@
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /home/vc-zephyrus/.cache/warp/1.17.0
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 2.21 ms  (cached)
+Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.54 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 1.07 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 1.08 ms  (cached)
+Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 1.82 ms  (cached)
+Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.43 ms  (cached)
+Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 0.67 ms  (cached)
+Module narrow_phase_gjk_mpr_True_False_write_contact_support_map_default 828685a load on device 'cuda:0' took 3.89 ms  (cached)
+Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 3.67 ms  (cached)
+Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 1.36 ms  (cached)
+Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 3.66 ms  (cached)
+Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 1.64 ms  (cached)
+Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.84 ms  (cached)
+Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 2.91 ms  (cached)
+Module newton._src.utils.mesh 92b663b load on device 'cpu' took 0.95 ms  (cached)
+Module milling_sim.removal daefc16 load on device 'cuda:0' took 1.08 ms  (cached)
+USD output saved in: /mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/scene_tmp.usd
+Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 0.84 ms  (cached)
+Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 1.28 ms  (cached)
+Module warp.utils 1de54f6 load on device 'cuda:0' took 0.96 ms  (cached)
+Module newton._src.utils.mesh b7d1752 load on device 'cuda:0' took 1.08 ms  (cached)
+Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.86 ms  (cached)
+Module newton._src.utils.render f02db3b load on device 'cuda:0' took 4.97 ms  (cached)
+{
+  "checks": {
+    "n_frames": 22320,
+    "sim_hz": 60.0,
+    "replay_time_s": 102.40147386800163,
+    "tcp_err_max_mm": 0.06510918543295886,
+    "tcp_err_mean_mm": 0.005024010563274338,
+    "n_unexpected_collision_frames": 0,
+    "unexpected_first": [],
+    "spindle_stock_min_mm": -5.946013461079258,
+    "programmed_max_depth_mm": 5.94188781394073,
+    "expected_deepest_mm": -5.94188781394073,
+    "tool": {
+      "name": "ball_8mm",
+      "type": "ball",
+      "diameter_mm": 8.0,
+      "flute_length_mm": 20.0,
+      "length_from_nose_mm": 55.0,
+      "shank_diameter_mm": 8.0,
+      "flutes": 2,
+      "max_rpm": 14000.0,
+      "config": "configs/tools/ball_8mm.yaml"
+    },
+    "other_pairs_min_mm": 59.381744084997855,
+    "robot_env_min_mm": null,
+    "penetration_tol_mm": 0.05,
+    "pass": true,
+    "gate": {
+      "tcp_err_mm": 0.1,
+      "unexpected": 0,
+      "depth_tol_mm": 1.0
+    }
+  },
+  "pair_min_mm": {
+    "fanuc_1/J4_link | stock": 133.154,
+    "fanuc_1/J4_link | table": 73.098,
+    "fanuc_1/J5_link | stock": 95.005,
+    "fanuc_1/J5_link | table": 59.382,
+    "fanuc_1/J6_link | stock": 98.563,
+    "fanuc_1/J6_link | table": 146.067,
+    "fanuc_1/spindle_link | stock": 41.118,
+    "fanuc_1/spindle_link | table": 91.118,
+    "fanuc_1/tool | stock": -5.946,
+    "fanuc_1/tool | table": 44.054
+  },
+  "media": {
+    "usd": "outputs/m3_sim/sample_5axis_wave/scene.usd",
+    "usd_frames": 1117,
+    "overview": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_overview.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_overview.gif",
+      "frames": 1117
+    },
+    "closeup": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_closeup.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_closeup.gif",
+      "frames": 1117
+    }
+  }
+}
+exit=0

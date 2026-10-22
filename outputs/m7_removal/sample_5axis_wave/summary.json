@@ -1,0 +1,76 @@
+{
+  "name": "sample_5axis_wave",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "material": {
+    "name": "aluminium_6061",
+    "k_c_N_mm2": 700.0,
+    "radial_ratio": 0.4,
+    "axial_ratio": 0.25
+  },
+  "stock_mm": {
+    "size": [
+      200.0,
+      200.0,
+      50.0
+    ],
+    "center_world": [
+      1.4,
+      0.0,
+      0.725
+    ]
+  },
+  "heightmap": {
+    "resolution_mm": 0.5,
+    "nx": 400,
+    "ny": 400
+  },
+  "removed_volume_total_mm3": 95351.21175646783,
+  "max_depth_mm": 5.985438823699951,
+  "robots": {
+    "fanuc_1": {
+      "tool": {
+        "name": "ball_8mm",
+        "type": "ball",
+        "diameter_mm": 8.0,
+        "flute_length_mm": 20.0,
+        "length_from_nose_mm": 55.0,
+        "shank_diameter_mm": 8.0,
+        "flutes": 2,
+        "max_rpm": 14000.0,
+        "config": null
+      },
+      "removed_volume_mm3": 95351.22036412194,
+      "cutting_time_s": 332.9248204199998,
+      "mrr_max_mm3_s": 1048.3705571618093,
+      "mrr_mean_cutting_mm3_s": 280.80721092856805,
+      "force_max_N": 163.4254588691306,
+      "force_mean_cutting_N": 43.39388533026049,
+      "deflection_max_mm": 0.3236849816031783,
+      "deflection_z_max_mm": 0.2806032080190846,
+      "joint_torque_max_Nm": [
+        71.336,
+        97.862,
+        97.4,
+        6.873,
+        31.436,
+        11.089
+      ],
+      "joint_stiffness_Nm_rad": [
+        800000.0,
+        800000.0,
+        600000.0,
+        200000.0,
+        200000.0,
+        100000.0
+      ]
+    }
+  },
+  "trajectories": {
+    "fanuc_1": "outputs/m2_ik/sample_5axis_wave/trajectory"
+  },
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "warp": "1.17.0"
+  }
+}

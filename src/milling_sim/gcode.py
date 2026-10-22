@@ -47,6 +47,8 @@ class Segment:
     radius: float = 0.0
     sweep: float = 0.0  # signed arc angle [rad]; + = CCW about the plane normal
     turns: int = 0  # extra full turns (P word), usually 0
+    axis_start: np.ndarray | None = None  # 5-axis: tool axis unit vector (tip -> spindle) at start, program frame
+    axis_end: np.ndarray | None = None  # ... at the end (None = vertical 3-axis)
 
     @property
     def length(self) -> float:
@@ -88,6 +90,8 @@ class GState:
     motion: int | None = None  # modal G0/1/2/3
     pos: np.ndarray = field(default_factory=lambda: np.zeros(3))
     work_offset: str = "G54"
+    axis: np.ndarray = field(default_factory=lambda: np.array([0.0, 0.0, 1.0]))  # tool axis (tip -> spindle), modal
+    five_axis: bool = False  # set once any G0/G1 carried an I J K tool vector
 
 
 @dataclass
@@ -98,6 +102,10 @@ class Program:
     md5: str
     n_lines: int
     final_state: GState
+
+    @property
+    def five_axis(self) -> bool:
+        return bool(self.final_state.five_axis)
 
     @property
     def cutting_length(self) -> float:
@@ -217,6 +225,16 @@ def parse_gcode(text: str, rapid_feed_mm_min: float = 3000.0, source: str = "<st
                 val = axis[k] * st.units
                 target[i] = (st.pos[i] + val) if not st.absolute else val
 
+        # 5-axis: I J K on a G0/G1 line is the tool axis unit vector (tip -> spindle), modal
+        axis_prev = st.axis.copy()
+        if mode in (0, 1) and any(k in axis for k in "IJK"):
+            v = np.array([axis.get("I", 0.0), axis.get("J", 0.0), axis.get("K", 0.0)])
+            n = np.linalg.norm(v)
+            if n < 1e-9:
+                raise GCodeError(f"line {ln}: zero-length tool axis vector")
+            st.axis = v / n
+            st.five_axis = True
+
         if mode == 0:
             seg = Segment("rapid", st.pos.copy(), target, rapid_feed, st.spindle_rpm, st.spindle_on, ln, raw.strip(), st.plane)
         elif mode == 1:
@@ -227,7 +245,10 @@ def parse_gcode(text: str, rapid_feed_mm_min: float = 3000.0, source: str = "<st
             if st.feed <= 0:
                 raise GCodeError(f"line {ln}: G{mode} without a feed rate")
             seg = _make_arc(st, target, axis, mode, ln, raw.strip())
-        if seg.length > 0 or seg.kind.startswith("arc"):
+        if st.five_axis:
+            seg.axis_start = axis_prev
+            seg.axis_end = st.axis.copy()
+        if seg.length > 0 or seg.kind.startswith("arc") or (st.five_axis and np.linalg.norm(seg.axis_end - seg.axis_start) > 1e-9):
             segments.append(seg)
         st.pos = target
 

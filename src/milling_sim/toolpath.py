@@ -24,6 +24,8 @@ class SamplingParams:
     accel: float = 1.0  # m/s^2 along the path
     corner_angle_deg: float = 5.0
     tool_dir: tuple[float, float, float] = (0.0, 0.0, -1.0)  # cutter axis, body -> tip, program frame
+    max_axis_step_deg: float = 2.0  # 5-axis: max tool-axis rotation between samples
+    reorient_rate_deg_s: float = 30.0  # 5-axis: speed of a reorientation in place
 
 
 @dataclass
@@ -56,6 +58,19 @@ class Toolpath:
         return self.motion != "rapid"
 
 
+def _slerp(a: np.ndarray, b: np.ndarray, s: np.ndarray) -> np.ndarray:
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
+    c = float(np.clip(np.dot(a, b), -1.0, 1.0))
+    ang = math.acos(c)
+    if ang < 1e-9:
+        return np.tile(a, (len(s), 1))
+    w0 = np.sin((1 - s) * ang) / math.sin(ang)
+    w1 = np.sin(s * ang) / math.sin(ang)
+    out = w0[:, None] * a[None, :] + w1[:, None] * b[None, :]
+    return out / np.linalg.norm(out, axis=1, keepdims=True)
+
+
 def _segment_s_values(seg: Segment, prm: SamplingParams) -> np.ndarray:
     L = seg.length
     if L <= 0:
@@ -69,6 +84,9 @@ def _segment_s_values(seg: Segment, prm: SamplingParams) -> np.ndarray:
         n = max(n_lin, n_arc)
     else:
         n = n_lin
+    if seg.axis_start is not None and seg.axis_end is not None:
+        ang = math.acos(float(np.clip(np.dot(seg.axis_start, seg.axis_end), -1.0, 1.0)))
+        n = max(n, int(math.ceil(ang / math.radians(prm.max_axis_step_deg))))
     return np.linspace(0.0, 1.0, n + 1)
 
 
@@ -142,16 +160,39 @@ def sample_program(prog: Program, prm: SamplingParams | None = None) -> Toolpath
     seg_time = []
     tool_dir = np.asarray(prm.tool_dir, dtype=float)
     tool_dir = tool_dir / np.linalg.norm(tool_dir)
+    DIRS = []
     for k, seg in enumerate(prog.segments):
         s = _segment_s_values(seg, prm)
         pts = seg.point(s)
+        if seg.axis_start is not None and seg.axis_end is not None:
+            # 5-axis: slerp the tool axis (tip -> spindle); our tool_dir points spindle -> tip
+            dirs = -_slerp(seg.axis_start, seg.axis_end, s)
+        else:
+            dirs = np.tile(tool_dir, (len(s), 1))
         ds = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(pts, axis=0), axis=1))])
         v0 = _junction_speed(prev, seg, prm)
         nxt = prog.segments[k + 1] if k + 1 < len(prog.segments) else None
         v1 = _junction_speed(seg, nxt, prm) if nxt is not None else 0.0
         if ds[-1] <= 0:
+            if seg.axis_start is not None and np.linalg.norm(seg.axis_end - seg.axis_start) > 1e-9:
+                # reorientation in place: several samples, duration from the angle at reorient_rate
+                ang = math.acos(float(np.clip(np.dot(seg.axis_start, seg.axis_end), -1, 1)))
+                tt = s * max(ang / math.radians(prm.reorient_rate_deg_s), 1e-3)
+                for i in range(1, len(s)):
+                    T.append(t_offset + tt[i])
+                    P.append(pts[i])
+                    DIRS.append(dirs[i])
+                    SP.append(0.0)
+                    FE.append(seg.feed)
+                    RPM.append(seg.spindle_rpm if seg.spindle_on else 0.0)
+                    SEG.append(k)
+                    LN.append(seg.line_no)
+                    MO.append(seg.kind)
+                t_offset += tt[-1]
+                seg_time.append(float(tt[-1]))
+            else:
+                seg_time.append(0.0)
             prev = seg
-            seg_time.append(0.0)
             continue
         tt = _trapezoid_times(ds, seg.feed, v0, v1, prm.accel)
         # actual speed by finite differences of the profile
@@ -161,6 +202,7 @@ def sample_program(prog: Program, prm: SamplingParams | None = None) -> Toolpath
         for i in range(start, len(s)):
             T.append(t_offset + tt[i])
             P.append(pts[i])
+            DIRS.append(dirs[i])
             SP.append(sp[i])
             FE.append(seg.feed)
             RPM.append(seg.spindle_rpm if seg.spindle_on else 0.0)
@@ -175,7 +217,7 @@ def sample_program(prog: Program, prm: SamplingParams | None = None) -> Toolpath
     return Toolpath(
         t=np.array(T),
         p=P,
-        tool_dir=np.tile(tool_dir, (n, 1)),
+        tool_dir=np.array(DIRS).reshape(-1, 3) if DIRS else np.tile(tool_dir, (n, 1)),
         speed=np.array(SP),
         feed=np.array(FE),
         spindle_rpm=np.array(RPM),

@@ -1,4 +1,4 @@
-# 階段性進度報告：M0–M9
+# 階段性進度報告：M0–M9 ＋ 示範
 
 更新日期：2026-10-22 · 路線圖：`plans/2026-10-22_00_roadmap.md` · 逐筆紀錄：`docs/DEVLOG.md`
 
@@ -169,3 +169,22 @@ TCP 追蹤誤差最大 0.0012 mm；非預期碰撞 0 frames；主軸–工件最
 | ＋ 切削力 | 0.90 mm | 0.28 mm |
 
 質量、PD 增益、力矩上限皆為佔位值，只看量級與趨勢。RTX 影片（`outputs/*/rtx_closeup/`）現在看得到工件被逐步切出輪廓、口袋與槽。
+
+---
+
+## 示範：五軸波浪曲面與中正大學校徽
+
+| 項目 | 五軸波浪 | 校徽雕刻 |
+|---|---|---|
+| G-code | `assets/gcode/sample_5axis_wave.nc`（G1 帶 I J K 刀軸向量） | `assets/gcode/ccu_emblem.nc`（`scripts/make_logo_gcode.py` 由校徽 PNG 產生） |
+| 刀具 | `ball_8mm` | `ball_2mm` |
+| 軌跡 | 12,895 點、354 s、刀軸傾斜最大 21.8°、關節速度 37% 上限 | 19,080 點、968 s、關節速度 6% 上限 |
+| 材料移除 | 95,351 mm³，曲面深 0–5.6 mm | 8,934 mm³，深 0.8 mm |
+| Newton 重播 | 22,320 frames，刀尖追蹤 0.065 mm，非預期碰撞 0，最深 −5.946 mm（程式 −5.942） | 58,089 frames，刀尖追蹤 0.0011 mm，非預期碰撞 0，最深 −0.801 mm（程式 −0.801） |
+| RTX | `outputs/m3_sim/sample_5axis_wave/rtx_closeup/` | `outputs/m3_sim/ccu_emblem/rtx_closeup/` |
+
+| 校徽高度圖 | 五軸曲面 |
+|---|---|
+| ![emblem](../outputs/m7_removal/ccu_emblem/heightmap.png) | ![wave](../outputs/m7_removal/sample_5axis_wave/surface_3d.png) |
+
+校徽圖片來源：zh.wikipedia `File:National Chung Cheng University.svg`（合理使用；本專案僅作校內示範）。

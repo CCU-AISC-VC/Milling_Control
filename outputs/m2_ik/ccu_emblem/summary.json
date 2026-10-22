@@ -1,0 +1,97 @@
+{
+  "gcode": "assets/gcode/ccu_emblem.nc",
+  "gcode_md5": "1f83a7cdf5952c115f0e1b1556185ead",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "robot": "fanuc_1",
+  "seed": {
+    "seed": 0,
+    "preferred_state": "home",
+    "n_candidates": 82,
+    "n_converged": 37,
+    "n_with_margin": 37,
+    "dist_to_ref_deg": 56.28596845555955,
+    "limit_margin": 0.2699962288974943,
+    "manipulability": 0.48292929491670916,
+    "q0_deg": [
+      -4.464,
+      -5.057,
+      -41.958,
+      0.477,
+      36.902,
+      -0.382
+    ]
+  },
+  "checks": {
+    "ik_pos_err_max_mm": 0.00132113738518718,
+    "ik_dir_err_max_deg": 0.001145892162157588,
+    "fk_pos_err_max_mm": 0.00132113738518718,
+    "fk_dir_err_max_deg": 0.0011458936916509393,
+    "n_not_converged": 0,
+    "iters_mean": 2.6742138364779873,
+    "max_step_deg_per_joint": [
+      0.0423,
+      0.0664,
+      0.0667,
+      0.2516,
+      0.0642,
+      0.2033
+    ],
+    "max_step_deg": 0.25163816146657847,
+    "vel_ratio_max_per_joint": [
+      0.0218,
+      0.0368,
+      0.0372,
+      0.0637,
+      0.0245,
+      0.0359
+    ],
+    "vel_ratio_max": 0.06373845213093832,
+    "acc_ratio_max_per_joint": [
+      0.1088,
+      0.2749,
+      0.2564,
+      0.2057,
+      0.0971,
+      0.1234
+    ],
+    "limit_margin_min": 0.2699962288974943,
+    "manipulability_min": 0.48010679601753076,
+    "q_range_deg": {
+      "min": [
+        -4.46,
+        -5.23,
+        -41.96,
+        -2.13,
+        36.53,
+        -2.62
+      ],
+      "max": [
+        3.0,
+        6.21,
+        -30.64,
+        3.27,
+        37.18,
+        1.71
+      ]
+    },
+    "newton_fk_check": {
+      "n_checked": 201,
+      "pos_err_max_mm": 0.0010869299573211815
+    },
+    "pass": true,
+    "gate": {
+      "pos_mm": 0.05,
+      "dir_deg": 0.05,
+      "max_step_deg": 5.0,
+      "vel_ratio": 1.0
+    }
+  },
+  "ik_time_s": 18.281725581999126,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  },
+  "n_samples": 19080,
+  "duration_s": 968.1430768902806,
+  "trajectory_dir": "outputs/m2_ik/ccu_emblem/trajectory"
+}

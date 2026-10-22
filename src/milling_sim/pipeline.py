@@ -153,9 +153,11 @@ def material_removal(cell: CellConfig, trajs: dict[str, JointTrajectory], tools:
     cutters = {n: Cutter(hm, tools[n].radius, ball=(tools[n].type == "ball")) for n in trajs}
     events = []
     tip_world = {}
+    dir_world = {}
     for n, tr in trajs.items():
         T_wb = cell.robot(n).base_xform
         tip_world[n] = (T_wb[:3, :3] @ tr.tcp_pos.T).T + T_wb[:3, 3]
+        dir_world[n] = (T_wb[:3, :3] @ tr.tool_dirs(cell.robot(n).robot.tool_axis_in_tcp).T).T
         events += [(tr.t[i], n, i) for i in range(1, tr.n)]
     events.sort()
     vols = {n: np.zeros(trajs[n].n) for n in trajs}
@@ -163,7 +165,7 @@ def material_removal(cell: CellConfig, trajs: dict[str, JointTrajectory], tools:
     for k, (t, n, i) in enumerate(events):
         tr = trajs[n]
         if tr.motion[i] != "rapid":
-            vols[n][i] = cutters[n].sweep(tip_world[n][i - 1], tip_world[n][i])
+            vols[n][i] = cutters[n].sweep(tip_world[n][i - 1], tip_world[n][i], dir_world[n][i - 1], dir_world[n][i])
     per_robot, series = {}, {}
     for n, tr in trajs.items():
         rc = cell.robot(n).robot

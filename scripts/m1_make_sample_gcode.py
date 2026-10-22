@@ -10,7 +10,7 @@ import sys
 import _bootstrap  # noqa: F401
 
 from milling_sim import ASSETS_DIR
-from milling_sim.sample_gcode import make_sample_face_boss, make_sample_pocket_contour, make_unit_square
+from milling_sim.sample_gcode import make_sample_5axis_wave, make_sample_face_boss, make_sample_pocket_contour, make_unit_square
 
 
 def main() -> int:
@@ -20,6 +20,7 @@ def main() -> int:
         "sample_pocket_contour.nc": make_sample_pocket_contour(),
         "unit_square_100mm.nc": make_unit_square(),
         "sample_face_boss.nc": make_sample_face_boss(),
+        "sample_5axis_wave.nc": make_sample_5axis_wave(),
     }
     for name, text in files.items():
         (out / name).write_text(text)

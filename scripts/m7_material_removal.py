@@ -80,9 +80,11 @@ def main() -> int:
     # --- merge all samples in global time order (each robot's samples keep their own index)
     events = []
     tip_world = {}
+    dir_world = {}
     for n, tr in trajs.items():
         T_wb = cell.robot(n).base_xform
         tip_world[n] = (T_wb[:3, :3] @ tr.tcp_pos.T).T + T_wb[:3, 3]
+        dir_world[n] = (T_wb[:3, :3] @ tr.tool_dirs(cell.robot(n).robot.tool_axis_in_tcp).T).T
         for i in range(1, tr.n):
             events.append((tr.t[i], n, i))
     events.sort()
@@ -95,7 +97,7 @@ def main() -> int:
         dt = tr.t[i] - tr.t[i - 1]
         vol = 0.0
         if tr.motion[i] != "rapid":
-            vol = cutters[n].sweep(p0, p1)
+            vol = cutters[n].sweep(p0, p1, dir_world[n][i - 1], dir_world[n][i])
         vol_total[n] += vol
         mrr = vol * 1e9 / dt if dt > 0 else 0.0  # mm^3/s
         rows.append({"t": t, "robot": n, "i": i, "dt": dt, "vol_mm3": vol * 1e9, "mrr_mm3_s": mrr, "rpm": tr.spindle_rpm[i], "fx": p1[0] - p0[0], "fy": p1[1] - p0[1], "fz": p1[2] - p0[2]})

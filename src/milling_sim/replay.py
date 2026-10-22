@@ -40,6 +40,29 @@ class ReplayResult:
     extras: dict = field(default_factory=dict)
 
 
+def tool_box_distance(tip: np.ndarray, axis: np.ndarray, radius: float, length: float, ball: bool, box_center: np.ndarray, box_size: np.ndarray) -> float:
+    """Signed vertical distance [m] between the lowest point of a tool (cylinder from the tip up
+    along -axis, ball or flat end) and an axis-aligned box: negative = the tool is below the box
+    top while inside its footprint (penetration depth); positive = clearance (vertical gap when
+    inside the footprint, otherwise the lateral gap). Newton's cylinder-vs-box contacts are not a
+    usable depth measure for thin tools, so the replay uses this instead."""
+    a = np.asarray(axis, dtype=float)  # spindle -> tip (points down when cutting)
+    tilt = float(np.arccos(np.clip(-a[2], -1.0, 1.0)))
+    low = np.asarray(tip, dtype=float).copy()
+    if not ball:
+        low[2] -= radius * np.sin(tilt)  # the rim of a tilted flat end dips below the tip
+    lo = box_center - box_size / 2
+    hi = box_center + box_size / 2
+    # lateral gap of the tool's footprint (approximated by the tip disk) to the box footprint
+    dx = max(lo[0] - (low[0] + radius), (low[0] - radius) - hi[0], 0.0)
+    dy = max(lo[1] - (low[1] + radius), (low[1] - radius) - hi[1], 0.0)
+    lateral = float(np.hypot(dx, dy))
+    vertical = float(low[2] - hi[2])
+    if lateral > 0.0:
+        return float(np.hypot(lateral, max(vertical, 0.0)))
+    return vertical
+
+
 def _robot_of(role: str) -> str | None:
     return role.split("/")[0] if "/" in role and not role.startswith("env/") else None
 
@@ -77,8 +100,13 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
     times, Q, P_ref_w, allowed, cutting, z_prog = frame_tables(trajs, cell, sim_hz)
     names = list(trajs)
     tcp_links = {n: cell.robot(n).robot.tcp_link for n in names}
-    tool_len = {n: (ToolConfig.from_meta(trajs[n].meta.get("tool")).length_from_nose if trajs[n].meta.get("tool") else 0.0) for n in names}
+    tool_cfg = {n: ToolConfig.from_meta(trajs[n].meta.get("tool")) for n in names}
+    tool_len = {n: (tool_cfg[n].length_from_nose if tool_cfg[n] else 0.0) for n in names}
     tool_axis = {n: np.asarray(cell.robot(n).robot.tool_axis_in_tcp, dtype=float) for n in names}
+    boxes = [(b.name, b.center, b.size, "stock") for b in cell.stock_boxes_world()]
+    tb = cell.table_box()
+    if tb is not None:
+        boxes.append(("table", tb.center, tb.size, "table"))
     tip_offsets = {n: (0.0 if trajs[n].meta.get("tool") else tip_offsets.get(n, 0.0)) for n in names}  # with a tool shape the tip is exact
     clearance = MeshClearance(scene, names) if len(names) >= 2 else None
     d_rr, pair_rr = np.inf, None
@@ -91,18 +119,34 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
             scene.set_q(n, Q[n][i])
         scene.eval_fk()
         row = {"t": t}
+        unexpected = []
         for n in names:
             T_nose = scene.link_pose(n, tcp_links[n])
-            tcp = T_nose[:3, 3] + (T_nose[:3, :3] @ tool_axis[n]) * tool_len[n]
+            a_w = T_nose[:3, :3] @ tool_axis[n]
+            tcp = T_nose[:3, 3] + a_w * tool_len[n]
             row[f"{n}_tcp_err_mm"] = float(np.linalg.norm(tcp - P_ref_w[n][i])) * 1e3
             row[f"{n}_spindle_stock_mm"] = np.inf
             row[f"{n}_z_prog_mm"] = z_prog[n][i] * 1e3
+            row[f"{n}_tool_table_mm"] = np.inf
+            if tool_cfg[n] is not None:
+                tc = tool_cfg[n]
+                for bname, bc, bs, kind in boxes:
+                    d = tool_box_distance(tcp, a_w, tc.radius, tc.length_from_nose, tc.type == "ball", bc, bs)
+                    key = (f"{n}/tool", bname)
+                    pair_min[key] = min(pair_min.get(key, np.inf), d)
+                    if kind == "stock":
+                        row[f"{n}_spindle_stock_mm"] = min(row[f"{n}_spindle_stock_mm"], d * 1e3)
+                        if d < -tol and not allowed[n][i]:
+                            unexpected.append((f"{n}/tool", bname, float(d)))
+                    else:
+                        row[f"{n}_tool_table_mm"] = min(row[f"{n}_tool_table_mm"], d * 1e3)
+                        if d < -tol:
+                            unexpected.append((f"{n}/tool", bname, float(d)))
         row["robot_robot_mm"] = np.inf
         row["robot_env_mm"] = np.inf
         row["other_mm"] = np.inf
         cs = scene.collide()
         row["n_contacts"] = cs.n_contacts
-        unexpected = []
         if clearance is not None:
             if i % clearance_every == 0 or i == len(times) - 1:
                 d_rr, pair_rr = clearance.min_distance_all()
@@ -115,6 +159,8 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
             a, b = _robot_of(r0), _robot_of(r1)
             if a and b and a != b:
                 continue  # robot-robot: Newton mesh-mesh candidates are not a clearance measure (see clearance.py)
+            if r0.endswith("/tool") or r1.endswith("/tool"):
+                continue  # tool cylinder: Newton's cylinder-vs-box distances are wrong for thin tools; handled analytically above
             pair_min[(r0, r1)] = min(pair_min.get((r0, r1), np.inf), d)
             cls = "unexpected"
             if (a or b) and (r0.startswith("env/") or r1.startswith("env/")):
@@ -166,9 +212,11 @@ class StockEvolver:
         self.mesh_step = mesh_step
         events = []
         self.tip_world = {}
+        self.dir_world = {}
         for n, tr in trajs.items():
             T_wb = cell.robot(n).base_xform
             self.tip_world[n] = (T_wb[:3, :3] @ tr.tcp_pos.T).T + T_wb[:3, 3]
+            self.dir_world[n] = (T_wb[:3, :3] @ tr.tool_dirs(cell.robot(n).robot.tool_axis_in_tcp).T).T
             events += [(tr.t[i], n, i) for i in range(1, tr.n) if tr.motion[i] != "rapid"]
         events.sort()
         self.events = events
@@ -179,7 +227,7 @@ class StockEvolver:
     def advance_to(self, t: float) -> None:
         while self.k < len(self.events) and self.events[self.k][0] <= t:
             _, n, i = self.events[self.k]
-            self.cutters[n].sweep(self.tip_world[n][i - 1], self.tip_world[n][i])
+            self.cutters[n].sweep(self.tip_world[n][i - 1], self.tip_world[n][i], self.dir_world[n][i - 1], self.dir_world[n][i])
             self.k += 1
 
     def mesh_arrays(self):

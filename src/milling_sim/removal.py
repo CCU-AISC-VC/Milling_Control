@@ -76,10 +76,11 @@ def _cut_capsule(
             s = sc
         zt = p0[2] + s * (p1[2] - p0[2])
         if ball == 1:
+            # p0/p1 are the ball CENTRES here: bottom of the sphere above this cell
             qx = p0[0] + s * ax
             qy = p0[1] + s * ay
             d2 = (cx - qx) * (cx - qx) + (cy - qy) * (cy - qy)
-            zt = zt + r - wp.sqrt(wp.max(r * r - wp.min(d2, r * r), 0.0))
+            zt = zt - wp.sqrt(wp.max(r * r - wp.min(d2, r * r), 0.0))
         z_tool = wp.min(z_tool, zt)
     z_tool = wp.max(z_tool, z_floor)
     z_old = z[i, j]
@@ -135,10 +136,24 @@ class Cutter:
         self.ball = 1 if ball else 0
         self._vol = wp.zeros(1, dtype=float, device=hm.z.device)
 
-    def sweep(self, p0: np.ndarray, p1: np.ndarray) -> float:
-        """Lower the map along the segment p0->p1 (world, m); returns removed volume [m^3]."""
+    def sweep(self, p0: np.ndarray, p1: np.ndarray, dir0: np.ndarray | None = None, dir1: np.ndarray | None = None) -> float:
+        """Lower the map along the tool-tip segment p0->p1 (world, m); returns removed volume [m^3].
+
+        ``dir0``/``dir1``: tool axis unit vectors (spindle -> tip) at the two ends. Ball tools use
+        the sphere centre = tip - r * dir, so a tilted ball-nose cuts correctly (5-axis). Flat tools
+        ignore the tilt (the tip disk is treated as horizontal): 2.5D limitation.
+        """
         hm = self.hm
-        if min(p0[2], p1[2]) >= hm.z_top:
+        p0 = np.asarray(p0, dtype=float)
+        p1 = np.asarray(p1, dtype=float)
+        if self.ball:
+            d0 = np.asarray(dir0, dtype=float) if dir0 is not None else np.array([0.0, 0.0, -1.0])
+            d1 = np.asarray(dir1, dtype=float) if dir1 is not None else np.array([0.0, 0.0, -1.0])
+            p0 = p0 - self.r * d0 / max(np.linalg.norm(d0), 1e-12)
+            p1 = p1 - self.r * d1 / max(np.linalg.norm(d1), 1e-12)
+            if min(p0[2], p1[2]) - self.r >= hm.z_top:
+                return 0.0
+        elif min(p0[2], p1[2]) >= hm.z_top:
             return 0.0  # tool above the stock top: nothing to cut
         xmin = min(p0[0], p1[0]) - self.r
         xmax = max(p0[0], p1[0]) + self.r

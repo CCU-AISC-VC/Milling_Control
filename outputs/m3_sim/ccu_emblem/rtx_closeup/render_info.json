@@ -1,0 +1,9 @@
+{
+  "usd": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/scene.usd",
+  "frames": 300,
+  "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/ccu_emblem/rtx_closeup/render_closeup.mp4",
+  "width": 1280,
+  "height": 720,
+  "subframes": 16,
+  "render_time_s": 95.2
+}

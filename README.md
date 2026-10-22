@@ -57,6 +57,11 @@ OMNI_KIT_ACCEPT_EULA=YES ~/envs/aisc_sim/bin/python scripts/m3_render_isaacsim.p
 # M7：材料移除、切削力、偏移
 ~/envs/aisc_sim/bin/python scripts/m7_material_removal.py --traj fanuc_1=outputs/m2_ik/sample_pocket_contour/trajectory
 
+# 示範：五軸波浪曲面（G1 帶 I J K 刀軸向量）與校徽雕刻
+~/envs/aisc_sim/bin/python scripts/m2_ik_trajectory.py --gcode assets/gcode/sample_5axis_wave.nc --tool configs/tools/ball_8mm.yaml
+~/envs/aisc_sim/bin/python scripts/make_logo_gcode.py assets/logo/ccu_emblem_1600.png --out assets/gcode/ccu_emblem.nc --preview assets/logo/ccu_emblem_toolpaths.png
+~/envs/aisc_sim/bin/python scripts/m2_ik_trajectory.py --gcode assets/gcode/ccu_emblem.nc --tool configs/tools/ball_2mm.yaml
+
 # M9：Newton 動力學（三種模式，約 15 分鐘）
 ~/envs/aisc_sim/bin/python scripts/m9_dynamics.py --traj outputs/m2_ik/sample_pocket_contour/trajectory
 
@@ -75,7 +80,7 @@ scripts/m4_run_mock_test.sh outputs/m2_ik/unit_square_100mm/trajectory outputs/m
 | ID | Stage | 交付物 | Gate（通過條件，開工前訂） | Status |
 |----|-------|--------|------|--------|
 | **M0** | 環境與資產：repo 骨架、xacro → URDF、Newton 載入、FK 對照 | `outputs/m0_assets/` | 1000 組隨機關節角，Newton 與 NumPy FK 的 TCP 位置差 < 0.01 mm | ✅ 2026-10-22：最大 0.0010 mm、姿態 2.9e-5° |
-| **M1** | G-code 解析與取樣：SPEC §4 方言、進給時間律、自製範例與單元測試 | `outputs/m1_gcode/` | 取樣路徑與理論路徑相差 < 弦差設定；單元測試全過 | ✅ 2026-10-22：最大弦差 0.012 mm（設定 0.02）、15 tests pass |
+| **M1** | G-code 解析與取樣：SPEC §4 方言（含五軸 I J K 刀軸向量）、進給時間律、自製範例與單元測試 | `outputs/m1_gcode/` | 取樣路徑與理論路徑相差 < 弦差設定；單元測試全過 | ✅ 2026-10-22：最大弦差 0.012 mm；五軸範例刀軸傾 21.8°；21 tests pass |
 | **M2** | 工件座標與 IK：逐點 IK、冗餘利用、速度檢查；cuRobo G0 規劃（未做，見 DEVLOG） | `outputs/m2_ik/`、軌跡檔 | FK(IK(x)) < 0.05 mm、刀軸 < 0.05°；不跳變；速度在上限內 | ✅ 2026-10-22：0.0014 mm、0.0011°、0 未收斂、速度 5% |
 | 檢查點 1 | 一份自製 G-code 走完 M1→M2 成為可執行的關節軌跡 | | | ✅ 2026-10-22 |
 | **M3** | Newton 模擬與渲染：cell、運動學重播、碰撞檢查、USD → Isaac Sim RTX 影片 | `outputs/m3_sim/` | 無非預期碰撞；模擬 TCP 與目標路徑相差 < 0.1 mm | ✅ 2026-10-22：0.0012 mm、非預期碰撞 0、RTX 影片 |

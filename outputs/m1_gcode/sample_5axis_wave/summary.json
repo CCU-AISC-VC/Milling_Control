@@ -1,0 +1,47 @@
+{
+  "gcode": "assets/gcode/sample_5axis_wave.nc",
+  "md5": "19803fecc46dd78d260c9c2765230ea2",
+  "n_lines": 4244,
+  "n_segments": 4236,
+  "segments_by_kind": {
+    "rapid": 4,
+    "linear": 4232,
+    "arc_cw": 0,
+    "arc_ccw": 0
+  },
+  "cutting_length_mm": 8599.160246928783,
+  "rapid_length_mm": 234.3819055249586,
+  "bounds_mm": {
+    "min": [
+      0.0,
+      0.0,
+      -5.942
+    ],
+    "max": [
+      190.695,
+      190.0,
+      15.0
+    ]
+  },
+  "sampling": {
+    "max_spacing_mm": 1.0,
+    "chord_tol_mm": 0.02,
+    "accel_m_s2": 1.0,
+    "corner_deg": 5.0,
+    "rapid_feed_mm_min": 3000.0
+  },
+  "n_samples": 12667,
+  "max_chord_error_mm": 4.336808689942018e-15,
+  "max_sample_spacing_mm": 1.0000000000000009,
+  "duration_s": 353.9239585178134,
+  "cutting_time_s": 349.03632040731236,
+  "min_dt_s": 0.0188561808316412,
+  "max_interval_speed_mm_min": 3000.000000006057,
+  "max_interval_accel_m_s2": 0.8664028104076125,
+  "warnings": [],
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "numpy": "2.5.1"
+  }
+}
