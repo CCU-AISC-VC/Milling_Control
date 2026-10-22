@@ -15,7 +15,7 @@
   "checks": {
     "n_frames": 18731,
     "sim_hz": 60.0,
-    "replay_time_s": 181.14662346800014,
+    "replay_time_s": 245.49126626100042,
     "per_robot": {
       "fanuc_1": {
         "tcp_err_max_mm": 0.00110308134860545,

@@ -27,3 +27,8 @@ acceleration_limits_rad_s2: [3.0, 3.0, 3.0, 6.0, 6.0, 8.0]
 # Torsional joint stiffness (N m / rad) for the static deflection model (SPEC §8). Order-of-
 # magnitude literature values for large industrial robots; NOT measured: UNVERIFIED.
 joint_stiffness_Nm_rad: [8.0e5, 8.0e5, 6.0e5, 2.0e5, 2.0e5, 1.0e5]
+# Joint PD gains for the Newton dynamics simulation (M9): position actuators kp [N m/rad] and
+# kd [N m s/rad], tuned only for stable tracking in simulation (not the FANUC controller): UNVERIFIED.
+pd_gains:
+  kp: [8.0e5, 8.0e5, 6.0e5, 2.0e4, 2.0e4, 1.0e4]
+  kd: [1.5e4, 1.5e4, 1.0e4, 3.0e2, 3.0e2, 1.5e2]

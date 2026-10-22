@@ -5,7 +5,8 @@
 >
 > 標記 ⚠️ **UNVERIFIED** 的項目是佔位符或由間接證據推斷的值，必須對照一手來源（FANUC 控制器的 UTOOL／UFRAME、實際量測、CAM 後處理器設定）確認後，才能讓任何要報告的結果依賴它。
 >
-> **Revision: r4（2026-10-22，M7 刀具與材料移除）**
+> **Revision: r5（2026-10-22，M9 動力學、切削工件渲染）**
+> r4 → r5：§9 動力學模型；§6 影片與 USD 的工件改為隨時間被切的高度圖網格。見 DEVLOG 2026-10-22 M9。
 > r3 → r4：§3.5 刀具庫與刀尖定義；§2.2 `robots[].tool`；§8 材料移除、切削力與靜態偏移模型；軌跡檔 `x y z` 改為刀尖位置、`meta.tool`。見 DEVLOG 2026-10-22 M7。
 > r2 → r3：§2.2 cell 設定檔的多程式座標、多工件、環境、相機；§6.2 雙機規則與機器人間淨空的量法。見 DEVLOG 2026-10-22 M6。
 > r1 → r2：§3.2 加主軸網格刀尖與 TCP 的 4 mm 差；§6 加碰撞判定規則；工件原點 z 改為工作台面 + 工件高（0.75）。見 DEVLOG 2026-10-22 M3。
@@ -151,6 +152,7 @@ URDF 的 collision 網格：手臂各 link 的簡化 STL、主軸用與 visual �
 | 碰撞判定 | **預期**：主軸–工件，且該時刻刀具允許在工件內（切削段、或緊接在切削後沿刀軸 +Z 的純退刀 G0）。**非預期**：其他任何穿透超過 0.05 mm（例如 J6 或法蘭碰工件、主軸碰工作台、橫移 G0 時主軸在工件內）。預期最深穿透 = 程式最深 − 網格刀尖差 4 mm，容差 1 mm |
 | 工件位置 | cell 設定的 `workpiece.origin_xyz_m` 是工件**頂面**角落；z = 工作台面 + 工件高（佔位值 0.70 + 0.05 = 0.75）⚠️ UNVERIFIED |
 | 渲染 | 開發：Newton `ViewerGL` headless；交付：`ViewerUSD` 錄 USD → Isaac Sim 6.1 RTX |
+| 切削中的工件 | 影片與 USD 裡工件是 `StockEvolver` 的高度圖實體網格（頂面 ＋ 側壁 ＋ 底面，1 mm 格），依影片時間逐步被切；碰撞仍用隱藏的工件方塊。USD 每 5 個影格存一次網格時間取樣（`/root/stock_machined`） |
 
 ## 6.2 雙機（M6）
 
@@ -179,6 +181,18 @@ URDF 的 collision 網格：手臂各 link 的簡化 STL、主軸用與 visual �
 | 切削力 | 比切削能 k_c（`configs/materials.yaml`，教科書量級 ⚠️ UNVERIFIED）：P = k_c · MRR；v_c = π D n／60；F_t = P／v_c；F_r = 0.4 F_t、F_a = 0.25 F_t（典型比例）。方向：切向沿 −進給、徑向 = z × 進給、軸向 +z（推離工件）。只在有 MRR 的樣本有力 |
 | 靜態偏移 | 關節扭轉彈簧 K = diag(k_j)（`joint_stiffness_Nm_rad`，量級佔位 ⚠️ UNVERIFIED）：C = J K⁻¹ Jᵀ（刀尖 Jacobian），δ = C[:3,:] · [F; 0]；關節力矩 τ = Jᵀ [F; 0]。不含重力、連桿柔性、動態 |
 | 有效範圍 | 只能比較趨勢（哪段路徑負載大、哪個姿態偏移大）；絕對值要等 k_c 與 k_j 量測後才可信 |
+
+## 9. 動力學（M9，`src/milling_sim/dynamics.py`）
+
+| 項目 | 模型 |
+|---|---|
+| 求解器 | Newton `SolverMuJoCo`（MuJoCo-Warp），integrator implicitfast，模擬 500 Hz、控制 250 Hz，接觸關閉 |
+| 質量／慣量 | URDF 匯入：手臂 link 無 `<inertial>` → Newton 由碰撞網格推算（總約 320 kg；型錄整機約 560 kg）⚠️ UNVERIFIED；主軸 2.1 kg（xacro） |
+| 致動器 | 關節 PD 位置致動器（`JointTargetMode.POSITION_VELOCITY`）：τ = kp (q_t − q) + kd (q̇_t − q̇)；`pd_gains` 見 robot YAML（佔位）；力矩上限 1e5 N·m（佔位） |
+| 重力前饋 | τ_g(q) = Σ_links J_com(q)ᵀ (m g)（NumPy 鏈 ＋ Newton 的 m、COM）；`control.joint_f = −τ_g`；靜止驗證誤差 0 |
+| 切削外力 | M7 的力向量（world）施加於主軸 link 的刀尖：`state.body_f` = (F, (p_tip − p_com) × F) |
+| 輸出 | 刀尖誤差（相對 M2 規劃軌跡）、z 向下垂、關節誤差、致動器力矩 |
+| 有效範圍 | 說明「PD 位置控制在重力與切削負載下的追蹤誤差量級」；不代表 FANUC 控制器（有前饋與積分）、不含減速機柔性與摩擦 |
 
 ## 7. 模型有效範圍
 

@@ -57,6 +57,9 @@ OMNI_KIT_ACCEPT_EULA=YES ~/envs/aisc_sim/bin/python scripts/m3_render_isaacsim.p
 # M7：材料移除、切削力、偏移
 ~/envs/aisc_sim/bin/python scripts/m7_material_removal.py --traj fanuc_1=outputs/m2_ik/sample_pocket_contour/trajectory
 
+# M9：Newton 動力學（三種模式，約 15 分鐘）
+~/envs/aisc_sim/bin/python scripts/m9_dynamics.py --traj outputs/m2_ik/sample_pocket_contour/trajectory
+
 # M8：學生 UI（瀏覽器開 http://localhost:8080，指南 docs/UI_GUIDE.md）
 ~/envs/aisc_sim/bin/python scripts/m8_ui.py --port 8080
 
@@ -80,6 +83,7 @@ scripts/m4_run_mock_test.sh outputs/m2_ik/unit_square_100mm/trajectory outputs/m
 | 檢查點 2 | sim2real ready：同一份軌跡檔兩邊都能跑 | | | 🚧 sim 端與假硬體 ✅；真機待驗證 |
 | **M7** | 刀具與材料移除：刀具庫、刀尖 IK 與碰撞體、2.5D 高度圖（Warp）、切削力與靜態偏移估計 | `outputs/m7_removal/` | 直槽體積與解析值差 < 2%；重播 gate 仍通過 | ✅ 2026-10-22：單機 55,812 mm³、雙機 88,426 mm³ |
 | **M8** | 學生操作 UI（viser）：選刀具／上傳 G-code／放工件／一鍵模擬／動畫／匯出 | `scripts/m8_ui.py`、`docs/UI_GUIDE.md` | 照指南不看程式碼能跑完並匯出 | ✅ 2026-10-22 |
+| **M9** | Newton 動力學：MuJoCo-Warp、關節 PD、重力與重力前饋、切削外力；影片與 RTX 裡工件隨時間被切 | `outputs/m9_dynamics/` | 無發散；PD＋前饋刀尖誤差 < 1 mm | ✅ 2026-10-22：純 PD 1.08 mm、前饋 0.31 mm、加切削力 0.90 mm（最大） |
 | M5 | 材料移除（選用） | | | 併入 M7 |
 | **M6** | 雙機協作：兩台 M-710iD/70 共用工件各切一端、共用時間軸、機器人間淨空、圍籬與環境、RTX demo | `outputs/m6_dual/` | 各台 TCP 追蹤 < 0.1 mm、無互撞（淨空 > 5 mm）、無非預期碰撞 | ✅ 2026-10-22：追蹤 0.0011 mm、最小淨空 78.5 mm、碰撞 0；工件掛在另一台 TCP 的模式未做 |
 
@@ -89,7 +93,7 @@ Legend: ✅ done · 🚧 in progress · ❌ not started. **這張表是進度的
 
 | 路徑 | 內容 |
 |---|---|
-| `src/milling_sim/` | 共用程式：`gcode.py`、`toolpath.py`（M1）；`cell.py`、`ik.py`、`traj_io.py`（M2）；`sim.py`、`replay.py`（M3／M6 重播與碰撞分類）；`clearance.py`（M6）；`tool.py`、`removal.py`、`cutting.py`（M7）；`pipeline.py`、`ui/app.py`（M8）；`urdf_kinematics.py`、`newton_robot.py`、`viz.py`（M0） |
+| `src/milling_sim/` | 共用程式：`gcode.py`、`toolpath.py`（M1）；`cell.py`、`ik.py`、`traj_io.py`（M2）；`sim.py`、`replay.py`（M3／M6 重播與碰撞分類）；`clearance.py`（M6）；`tool.py`、`removal.py`、`cutting.py`（M7）；`pipeline.py`、`ui/app.py`（M8）；`dynamics.py`（M9）；`urdf_kinematics.py`、`newton_robot.py`、`viz.py`（M0） |
 | `scripts/` | 一個階段一個腳本；對照表在 `scripts/README.md` |
 | `configs/robots/`、`configs/cells/`、`configs/tools/`、`configs/materials.yaml` | 機器人設定（刀軸、速度比例、關節剛性）、cell 設定（機器人與刀具、程式座標、工件、工作台、圍籬、相機）、刀具庫、材料表 |
 | `assets/fanuc_m710id70_spindle/` | 攤平的 URDF 與網格（由 `scripts/m0_flatten_urdf.py` 產生）；`assets/gcode/` 範例 G-code |

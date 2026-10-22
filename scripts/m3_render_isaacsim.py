@@ -23,6 +23,8 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
+
 REPO = Path(__file__).resolve().parents[1]
 
 
@@ -67,6 +69,12 @@ def main() -> int:
     from isaacsim import SimulationApp
 
     app = SimulationApp({"headless": True, "width": args.width, "height": args.height})
+    # The Fabric scene delegate ignores time-sampled mesh points (the machined stock); use the
+    # classic USD imaging delegate so deforming meshes follow the timeline.
+    import carb.settings
+
+    carb.settings.get_settings().set_bool("/app/useFabricSceneDelegate", False)
+    carb.settings.get_settings().set_bool("/persistent/omnihydra/useFastSceneDelegate", False)
     import omni.replicator.core as rep
     import omni.timeline
     import omni.usd
@@ -77,7 +85,65 @@ def main() -> int:
     tps = stage_in.GetTimeCodesPerSecond()
     print("USD time range", t_start, t_end, "tps", tps, "prims", len(list(stage_in.Traverse())), flush=True)
 
-    omni.usd.get_context().open_stage(str(args.usd))
+    # Kit does not animate time-sampled mesh `points` (the progressively machined stock) and
+    # ignores prim edits made after the stage is open, so we pre-process the file: every points
+    # time sample becomes its own static mesh prim whose `visibility` is time-sampled to cover
+    # [t_i, t_i+1); the deforming prim is deactivated. The result is saved next to the source.
+    deforming = [UsdGeom.Mesh(pr) for pr in stage_in.Traverse() if pr.IsA(UsdGeom.Mesh) and UsdGeom.Mesh(pr).GetPointsAttr().GetNumTimeSamples() > 1]
+    snapshot_sets = []  # (time codes, prim paths) per deforming mesh
+    usd_to_open = args.usd
+    if deforming:
+        for di, mesh in enumerate(deforming):
+            pts_attr = mesh.GetPointsAttr()
+            times = list(pts_attr.GetTimeSamples())
+            # Newton writes topology as time samples too (no default value): read it at the first sample
+            t0s = times[0]
+            fvi = mesh.GetFaceVertexIndicesAttr().Get(t0s)
+            fvc = mesh.GetFaceVertexCountsAttr().Get(t0s)
+            nrm_attr = mesh.GetNormalsAttr()
+            binding = UsdShade.MaterialBindingAPI(mesh.GetPrim()).GetDirectBinding().GetMaterial()
+            color = mesh.GetDisplayColorAttr().Get()
+            for i, tc in enumerate(times):
+                snap = UsdGeom.Mesh.Define(stage_in, f"/World/stock_snaps/d{di}_s{i}")
+                snap.CreatePointsAttr(pts_attr.Get(tc))
+                snap.CreateFaceVertexIndicesAttr(fvi)
+                snap.CreateFaceVertexCountsAttr(fvc)
+                if nrm_attr and nrm_attr.HasValue() and nrm_attr.Get(tc) is not None:
+                    snap.CreateNormalsAttr(nrm_attr.Get(tc))
+                    snap.SetNormalsInterpolation(UsdGeom.Tokens.vertex)
+                snap.CreateSubdivisionSchemeAttr(UsdGeom.Tokens.none)
+                snap.CreateExtentAttr(UsdGeom.PointBased(snap).ComputeExtent(pts_attr.Get(tc)))
+                if os.environ.get("DEBUG_SNAP_COLOR"):
+                    snap.CreateDisplayColorAttr([(1.0, 0.1, 0.1)])
+                elif binding:
+                    UsdShade.MaterialBindingAPI.Apply(snap.GetPrim()).Bind(binding)
+                elif color:
+                    snap.CreateDisplayColorAttr(color)
+                else:
+                    snap.CreateDisplayColorAttr([(0.82, 0.78, 0.64)])
+                # Kit ignores time-sampled visibility and drops most in-session edits, but it does
+                # follow time-sampled transforms (the robots animate that way). So every snapshot
+                # is always visible and parked 1 km below the floor except during [t_i, t_i+1):
+                # translate keys with a 0.001-timecode ramp so linear interpolation never shows.
+                # one key per integer time code so the value is exact at every rendered frame,
+                # whatever interpolation Kit applies between keys
+                far = Gf.Vec3d(0.0, 0.0, -1000.0)
+                home = Gf.Vec3d(0.0, 0.0, 0.0)
+                op = UsdGeom.Xformable(snap).AddTranslateOp()
+                t_lo = int(round(tc))
+                t_hi = int(round(times[i + 1])) if i + 1 < len(times) else int(round(t_end)) + 61
+                for k in range(int(round(t_start)), int(round(t_end)) + 61):  # keys well past the end: Kit may evaluate beyond the last frame
+                    v = home if t_lo <= k < t_hi else far
+                    op.Set(v, float(k))
+                    op.Set(v, float(k) + 0.999)  # hold the value: Kit evaluates at fractional times
+            mesh.GetPrim().SetActive(False)
+            snapshot_sets.append((np.array(times), [str(pr.GetPath()) for pr in [stage_in.GetPrimAtPath(f"/World/stock_snaps/d{di}_s{i}") for i in range(len(times))]]))
+            print(f"SNAPSHOTS {mesh.GetPath()}: {len(times)} meshes", flush=True)
+        usd_to_open = args.usd.with_name(args.usd.stem + "_render.usd")
+        stage_in.GetRootLayer().Export(str(usd_to_open))
+        print("RENDER_USD", usd_to_open, flush=True)
+
+    omni.usd.get_context().open_stage(str(usd_to_open))
     for _ in range(20):
         app.update()
     stage = omni.usd.get_context().get_stage()
@@ -180,15 +246,27 @@ def main() -> int:
     writer.initialize(output_dir=str(frames_dir), rgb=True)
     writer.attach([rp])
     timeline = omni.timeline.get_timeline_interface()
+    timeline.set_looping(False)  # otherwise setting the end time wraps to the start (last frame showed t = 0)
+    timeline.set_end_time((t_end + 60.0) / tps)  # keep the clamp away from the last rendered frame
+    snap_current = [0] * len(snapshot_sets)
+
+    def show_snapshots(tc):
+        return None  # snapshots are driven by their time-sampled transforms in the pre-processed USD
+    # Deforming meshes (the progressively machined stock) carry time-sampled `points`; Kit's
+    # Fabric scene delegate does not re-read them when the timeline moves, so bake the sample
+    # of the current frame into the attribute's default value before each render.
     n = args.frames
     for k in range(n):
         frac = k / max(n - 1, 1)
-        tc = t_start + frac * (t_end - t_start)
+        tc = float(round(t_start + frac * (t_end - t_start)))  # integer time codes: exact keys
         set_cam(frac)
+        show_snapshots(tc)
         timeline.set_current_time(tc / tps)
         for _ in range(2):
             app.update()
         rep.orchestrator.step(rt_subframes=args.subframes)
+        if k >= n - 2:
+            print(f"TIMELINE frame {k}: requested tc {tc}, timeline now {timeline.get_current_time() * tps:.2f} tc", flush=True)
         if k % 20 == 0 or k == n - 1:
             print(f"RENDER frame {k+1}/{n} timecode {tc:.1f} ({round(time.time() - t0)} s)", flush=True)
     rep.orchestrator.wait_until_complete()

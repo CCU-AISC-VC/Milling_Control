@@ -6,3 +6,5 @@
 ╰───────────────────────────────────────╯
 Milling_Control UI: http://localhost:8080
 (viser) Connection opened (0, 1 total), 105 persistent messages
+(viser) Connection closed (0, 0 total)
+(viser) Connection opened (1, 1 total), 105 persistent messages

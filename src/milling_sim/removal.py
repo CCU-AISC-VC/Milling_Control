@@ -178,3 +178,33 @@ def surface_mesh(hm: HeightMap, step: int = 1) -> tuple[np.ndarray, np.ndarray]:
     d = idx[:-1, 1:].ravel()
     F = np.concatenate([np.stack([a, b, c], axis=1), np.stack([a, c, d], axis=1)])
     return V, F
+
+
+def solid_from_heightmap(hm: HeightMap, step: int = 2) -> tuple[np.ndarray, np.ndarray]:
+    """Closed block mesh: machined top surface + four side walls + bottom (world coords)."""
+    Z = hm.numpy()[::step, ::step]
+    nx, ny = Z.shape
+    # stretch the decimated grid to the exact stock footprint (cell centres stop half a cell short)
+    xs = np.linspace(hm.x0, hm.x0 + hm.nx * hm.dx, nx)
+    ys = np.linspace(hm.y0, hm.y0 + hm.ny * hm.dx, ny)
+    X, Y = np.meshgrid(xs, ys, indexing="ij")
+    top = np.stack([X.ravel(), Y.ravel(), Z.ravel()], axis=1)
+    idx = np.arange(nx * ny).reshape(nx, ny)
+    a, b, c, d = idx[:-1, :-1].ravel(), idx[1:, :-1].ravel(), idx[1:, 1:].ravel(), idx[:-1, 1:].ravel()
+    faces = [np.stack([a, b, c], axis=1), np.stack([a, c, d], axis=1)]
+    # bottom ring vertices under the boundary of the top grid
+    zb = hm.z_floor
+    ring_top = np.concatenate([idx[:, 0], idx[-1, 1:], idx[-2::-1, -1], idx[0, -2:0:-1]])  # boundary loop (ccw seen from +z)
+    n_top = len(top)
+    bottom = top[ring_top].copy()
+    bottom[:, 2] = zb
+    V = np.concatenate([top, bottom])
+    m = len(ring_top)
+    for k in range(m):
+        t0, t1 = ring_top[k], ring_top[(k + 1) % m]
+        b0, b1 = n_top + k, n_top + (k + 1) % m
+        faces.append(np.array([[t0, b0, b1], [t0, b1, t1]]))
+    # bottom cap: fan from the first bottom vertex (reversed so the normal points down)
+    cap = np.array([[n_top, n_top + (k + 1) % m, n_top + k] for k in range(1, m - 1)])
+    faces.append(cap)
+    return V.astype(np.float32), np.concatenate(faces).astype(np.int32)

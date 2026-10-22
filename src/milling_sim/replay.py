@@ -19,6 +19,7 @@ import pandas as pd
 
 from .cell import CellConfig
 from .clearance import CONTACT_TOL, MeshClearance
+from .removal import Cutter, make_heightmap, solid_from_heightmap
 from .sim import CellScene, in_stock_allowed_mask
 from .tool import ToolConfig
 from .traj_io import JointTrajectory
@@ -151,8 +152,62 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
     return ReplayResult(times, Q, df, pair_min, unexpected_frames, per_robot, time.perf_counter() - t0, extras)
 
 
+# ---------------------------------------------------------------------------- machined stock
+STOCK_COLOR = (0.82, 0.78, 0.64)
+
+
+class StockEvolver:
+    """Height-map stock that is cut progressively as time advances (for videos / USD)."""
+
+    def __init__(self, cell: CellConfig, trajs: dict[str, JointTrajectory], tools: dict[str, ToolConfig], resolution: float = 1e-3, mesh_step: int = 1):
+        stock = cell.stock_boxes_world()[0]
+        self.hm = make_heightmap(stock.center[:2], stock.size[:2], z_top=stock.center[2] + stock.size[2] / 2, height=stock.size[2], resolution=resolution)
+        self.cutters = {n: Cutter(self.hm, tools[n].radius, ball=(tools[n].type == "ball")) for n in trajs}
+        self.mesh_step = mesh_step
+        events = []
+        self.tip_world = {}
+        for n, tr in trajs.items():
+            T_wb = cell.robot(n).base_xform
+            self.tip_world[n] = (T_wb[:3, :3] @ tr.tcp_pos.T).T + T_wb[:3, 3]
+            events += [(tr.t[i], n, i) for i in range(1, tr.n) if tr.motion[i] != "rapid"]
+        events.sort()
+        self.events = events
+        self.k = 0
+        self._wp_points = None
+        self._wp_indices = None
+
+    def advance_to(self, t: float) -> None:
+        while self.k < len(self.events) and self.events[self.k][0] <= t:
+            _, n, i = self.events[self.k]
+            self.cutters[n].sweep(self.tip_world[n][i - 1], self.tip_world[n][i])
+            self.k += 1
+
+    def mesh_arrays(self):
+        import warp as wp
+
+        V, F = solid_from_heightmap(self.hm, self.mesh_step)
+        if self._wp_points is None or len(self._wp_points) != len(V):
+            self._wp_points = wp.array(V, dtype=wp.vec3)
+            self._wp_indices = wp.array(F.reshape(-1), dtype=wp.int32)
+        else:
+            self._wp_points.assign(V)
+        return self._wp_points, self._wp_indices
+
+
+def tools_from_trajs(cell: CellConfig, trajs: dict[str, JointTrajectory]) -> dict[str, ToolConfig]:
+    out = {}
+    for n, tr in trajs.items():
+        t = ToolConfig.from_meta(tr.meta.get("tool")) or cell.robot(n).tool
+        if t is None:
+            from .tool import load_tool
+
+            t = load_tool("configs/tools/flat_10mm.yaml")
+        out[n] = t
+    return out
+
+
 # ---------------------------------------------------------------------------- media
-def record_usd(scene: CellScene, trajs: dict[str, JointTrajectory], t_vid: np.ndarray, usd_path: Path, fps: int) -> None:
+def record_usd(scene: CellScene, trajs: dict[str, JointTrajectory], t_vid: np.ndarray, usd_path: Path, fps: int, stock: StockEvolver | None = None, stock_every: int = 5) -> None:
     import newton.viewer as nv
 
     tmp = usd_path.with_name(usd_path.stem + "_tmp" + usd_path.suffix)
@@ -165,6 +220,10 @@ def record_usd(scene: CellScene, trajs: dict[str, JointTrajectory], t_vid: np.nd
         scene.eval_fk()
         usd.begin_frame(k / fps)
         usd.log_state(scene.state)
+        if stock is not None and (k % stock_every == 0 or k == len(t_vid) - 1):
+            stock.advance_to(float(t_vid[k]))
+            pts, idx = stock.mesh_arrays()
+            usd.log_mesh("/stock_machined", pts, idx, color=STOCK_COLOR, roughness=0.7, dynamic=True)
         usd.end_frame()
     usd.close()
     os.replace(tmp, usd_path)
@@ -173,7 +232,9 @@ def record_usd(scene: CellScene, trajs: dict[str, JointTrajectory], t_vid: np.nd
 TRAIL_COLORS = [(1.0, 0.45, 0.05), (0.1, 0.75, 1.0), (0.3, 1.0, 0.3), (1.0, 0.3, 0.8)]
 
 
-def render_videos(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory], t_vid: np.ndarray, out: Path, views: dict[str, tuple], fps: int, size=(1280, 720), gif_frames: int = 150) -> dict:
+def render_videos(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory], t_vid: np.ndarray, out: Path, views: dict[str, tuple], fps: int, size=(1280, 720), gif_frames: int = 150, stock_factory=None) -> dict:
+    """``stock_factory``: callable returning a fresh StockEvolver (one per view, since the cut
+    progresses with the video time)."""
     from .viz import HeadlessGL, save_gif, save_mp4, save_png
 
     gl = HeadlessGL(scene.model, *size)
@@ -188,10 +249,15 @@ def render_videos(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTraj
     for vname, (pos, tgt) in views.items():
         frames = []
         gl.set_camera(pos, tgt)
+        stock = stock_factory() if stock_factory is not None else None
         for k in range(len(t_vid)):
             for n in trajs:
                 scene.set_q(n, Qv[n][k])
             scene.eval_fk()
+            if stock is not None:
+                stock.advance_to(float(t_vid[k]))
+                pts, idx = stock.mesh_arrays()
+                gl.viewer.log_mesh("/stock_machined", pts, idx, color=STOCK_COLOR, dynamic=True)
             lines, points = [], []
             for ci, (n, tr) in enumerate(trajs.items()):
                 j = int(np.searchsorted(tr.t, t_vid[k], side="right"))

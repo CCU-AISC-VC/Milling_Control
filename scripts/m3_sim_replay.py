@@ -22,7 +22,7 @@ import yaml
 
 from milling_sim import OUTPUTS_DIR, REPO_ROOT
 from milling_sim.cell import load_cell
-from milling_sim.replay import PENETRATION_TOL, record_usd, render_videos, replay
+from milling_sim.replay import PENETRATION_TOL, StockEvolver, record_usd, render_videos, replay, tools_from_trajs
 from milling_sim.sim import build_cell_scene
 from milling_sim.traj_io import read_trajectory
 from milling_sim.viz import finish_figure, new_figure
@@ -47,6 +47,8 @@ def main() -> int:
     ap.add_argument("--video-fps", type=int, default=30)
     ap.add_argument("--no-video", action="store_true")
     ap.add_argument("--no-usd", action="store_true")
+    ap.add_argument("--no-machined-stock", action="store_true", help="draw the stock as a plain box instead of the progressively cut height map")
+    ap.add_argument("--stock-res-mm", type=float, default=1.0)
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 
@@ -60,8 +62,11 @@ def main() -> int:
     rc = cell.robot(robot).robot
     tip_offset = float(yaml.safe_load(rc.path.read_text()).get("mesh_tip_offset_mm", 0.0)) * 1e-3
 
-    scene = build_cell_scene(cell, include_environment=True)
+    machined = not args.no_machined_stock
+    scene = build_cell_scene(cell, include_environment=True, stock_visible=not machined)
     res = replay(scene, cell, {robot: traj}, sim_hz=args.sim_hz, tip_offsets={robot: tip_offset})
+    tools = tools_from_trajs(cell, {robot: traj})
+    stock_factory = (lambda: StockEvolver(cell, {robot: traj}, tools, resolution=args.stock_res_mm * 1e-3)) if machined else None
     res.df.to_csv(out / "replay.csv", index=False)
     pr = res.per_robot[robot]
     df = res.df
@@ -107,13 +112,13 @@ def main() -> int:
     t_vid = np.linspace(0.0, T_end, n_vid)
     media = {}
     if not args.no_usd:
-        core = build_cell_scene(cell, include_environment=False)
-        record_usd(core, {robot: traj}, t_vid, out / "scene.usd", args.video_fps)
+        core = build_cell_scene(cell, include_environment=False, stock_visible=not machined)
+        record_usd(core, {robot: traj}, t_vid, out / "scene.usd", args.video_fps, stock=stock_factory() if machined else None)
         media["usd"] = rel(out / "scene.usd")
         media["usd_frames"] = n_vid
     if not args.no_video:
         views = {k: (tuple(v["pos"]), tuple(v["target"])) for k, v in cell.cameras.items()} or DEFAULT_VIEWS
-        media.update(render_videos(scene, cell, {robot: traj}, t_vid, out, views, args.video_fps))
+        media.update(render_videos(scene, cell, {robot: traj}, t_vid, out, views, args.video_fps, stock_factory=stock_factory))
 
     summary = {"trajectory": rel(args.traj), "gcode": meta["gcode"], "cell": rel(cell.path), "robot": robot, "checks": checks, "media": media, "video_speed": args.video_speed, "env": {"python": platform.python_version(), "newton": __import__("newton").__version__}}
     (out / "summary.json").write_text(json.dumps(summary, indent=2, default=str))

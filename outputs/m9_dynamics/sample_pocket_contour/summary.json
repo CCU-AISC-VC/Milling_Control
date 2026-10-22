@@ -1,0 +1,143 @@
+{
+  "trajectory": "outputs/m2_ik/sample_pocket_contour/trajectory",
+  "gcode": "assets/gcode/sample_pocket_contour.nc",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "robot": "fanuc_1",
+  "tool": {
+    "name": "flat_10mm",
+    "type": "flat",
+    "diameter_mm": 10.0,
+    "flute_length_mm": 25.0,
+    "length_from_nose_mm": 60.0,
+    "shank_diameter_mm": 10.0,
+    "flutes": 2,
+    "max_rpm": 12000.0,
+    "config": "configs/tools/flat_10mm.yaml"
+  },
+  "dynamics": {
+    "solver": "SolverMuJoCo (implicitfast)",
+    "sim_dt": 0.002,
+    "control_hz": 250.0,
+    "kp": [
+      800000.0,
+      800000.0,
+      600000.0,
+      20000.0,
+      20000.0,
+      10000.0
+    ],
+    "kd": [
+      15000.0,
+      15000.0,
+      10000.0,
+      300.0,
+      300.0,
+      150.0
+    ],
+    "effort_limit_Nm": 100000.0,
+    "gravity": true,
+    "masses_kg_from_urdf_import": true,
+    "note": "masses/inertias derived from collision meshes (UNVERIFIED); gains tuned for simulation only"
+  },
+  "modes": {
+    "pd": {
+      "mode": "pd",
+      "finite": true,
+      "settle_sag_mm": [
+        -0.3003,
+        0.0233,
+        -0.6895
+      ],
+      "tip_err_max_mm": 1.0763538805071995,
+      "tip_err_mean_mm": 0.9135968235218097,
+      "tip_err_z_min_mm": -1.0439060411409073,
+      "joint_err_max_mdeg": [
+        8.105112978646341,
+        28.31882092866895,
+        31.090184323291286,
+        31.615884478451076,
+        33.90217005223092,
+        22.57469423880452
+      ],
+      "tau_max_Nm": [
+        59.247346728137074,
+        331.4010910894753,
+        291.67761570985937,
+        5.243555448797845,
+        8.27460358099673,
+        1.3622168275933932
+      ],
+      "wall_time_s": 521.0335679159998,
+      "n_ticks": 60111
+    },
+    "pd_gff": {
+      "mode": "pd_gff",
+      "finite": true,
+      "settle_sag_mm": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "tip_err_max_mm": 0.3102546088762051,
+      "tip_err_mean_mm": 0.04157987537540549,
+      "tip_err_z_min_mm": -0.09014948545105206,
+      "joint_err_max_mdeg": [
+        8.105112978646341,
+        16.610170565108643,
+        13.53424870217312,
+        27.954236072663107,
+        17.410678301235137,
+        22.573973867290494
+      ],
+      "tau_max_Nm": [
+        59.24796140103632,
+        331.0152850930294,
+        291.68912458957556,
+        5.243325218971573,
+        8.27429608346517,
+        1.3622197535354466
+      ],
+      "wall_time_s": 499.54148913899917,
+      "n_ticks": 60111
+    },
+    "pd_gff_cut": {
+      "mode": "pd_gff_cut",
+      "finite": true,
+      "settle_sag_mm": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "tip_err_max_mm": 0.9022944970317975,
+      "tip_err_mean_mm": 0.27646443224063844,
+      "tip_err_z_min_mm": -0.23648863456660063,
+      "joint_err_max_mdeg": [
+        8.124037425718472,
+        16.610170565108643,
+        19.209655776039526,
+        27.954236072663107,
+        80.03890546529848,
+        131.21798026139803
+      ],
+      "tau_max_Nm": [
+        125.11887798616996,
+        331.0152850930294,
+        291.68912458957556,
+        5.243325218971573,
+        23.22495582381397,
+        24.28025513600807
+      ],
+      "wall_time_s": 300.81147701400005,
+      "n_ticks": 60111
+    }
+  },
+  "pass": true,
+  "gate": {
+    "finite": true,
+    "pd_gff_tip_err_max_mm": 1.0
+  },
+  "env": {
+    "python": "3.12.15",
+    "newton": "1.7.0.dev0"
+  }
+}

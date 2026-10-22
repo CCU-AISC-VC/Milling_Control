@@ -86,21 +86,26 @@ class CellScene:
         return ContactSummary(out, n)
 
 
-def _add_box(builder: newton.ModelBuilder, b) -> int:
+def _add_box(builder: newton.ModelBuilder, b, visible: bool = True) -> int:
+    cfg = builder.default_shape_cfg.copy()
+    cfg.is_visible = visible
     return builder.add_shape_box(
         -1,
         xform=wp.transform(wp.vec3(*[float(v) for v in b.center]), wp.quat_identity()),
         hx=float(b.size[0]) / 2,
         hy=float(b.size[1]) / 2,
         hz=float(b.size[2]) / 2,
+        cfg=cfg,
         label=b.name,
         color=tuple(float(v) for v in b.color),
         opacity=float(b.opacity),
     )
 
 
-def build_cell_scene(cell: CellConfig, rigid_contact_max: int = 8192, include_environment: bool = True) -> CellScene:
-    """Robots + table + stock(s) (+ floor / fence / cabinets when ``include_environment``)."""
+def build_cell_scene(cell: CellConfig, rigid_contact_max: int = 8192, include_environment: bool = True, stock_visible: bool = True) -> CellScene:
+    """Robots + table + stock(s) (+ floor / fence / cabinets when ``include_environment``).
+    ``stock_visible=False`` keeps the stock boxes for collision but hides them, so a machined
+    (height-map) mesh can be drawn in their place."""
     builder = newton.ModelBuilder(up_axis=newton.Axis.Z)
     robots: dict[str, RobotHandle] = {}
     shape_role: dict[int, str] = {}
@@ -135,7 +140,7 @@ def build_cell_scene(cell: CellConfig, rigid_contact_max: int = 8192, include_en
         static["table"] = s
         shape_role[s] = "table"
     for b in cell.stock_boxes_world():
-        s = _add_box(builder, b)
+        s = _add_box(builder, b, visible=stock_visible)
         static[b.name] = s
         shape_role[s] = b.name  # "stock", "stock_2", ...
     if include_environment:

@@ -131,3 +131,17 @@
 - **做了什麼**：`src/milling_sim/pipeline.py`（plan → Newton 碰撞檢查 → 材料移除，與腳本同演算法）、`src/milling_sim/ui/app.py`（viser：cell／機器人／G-code 上傳／刀具庫與自訂刀具儲存／工件位置／材料／取樣參數／執行／結果／匯出／播放）、`scripts/m8_ui.py`、`docs/UI_GUIDE.md`。
 - **為什麼這樣做**：viser 已在共用環境（Newton 與 cuRobo 的檢視器都用它），不用裝東西；機器人顯示用 URDF visual STL ＋ NumPy FK，Newton 只在執行時做碰撞檢查。
 - **結果**：無頭測試：範例 G-code 從解析到材料移除 16.7 s（碰撞檢查 20 Hz，9.9 s）；結果與腳本一致。瀏覽器截圖在 `outputs/ui/`。
+
+## 2026-10-22 ｜ M9：Newton 動力學（關節 PD、重力、切削外力）＋ 影片裡的切削工件
+
+- **做了什麼**：
+  - `src/milling_sim/dynamics.py`：`SolverMuJoCo`（implicitfast、關接觸）、關節 PD 位置致動器（`JointTargetMode.POSITION_VELOCITY`，`pd_gains` 在 robot YAML）、重力前饋 τ_g(q) = Σ J_comᵀ (m g)（NumPy 鏈 ＋ Newton 的質量／質心，以 `control.joint_f` 施加）、刀尖外力（`state.body_f`）。URDF `effort=0` 會讓 MuJoCo 編譯失敗（`actfrcrange`），改成 1e5 N·m 佔位上限；`Control.joint_target_pos` 在 Newton 1.5 後改名 `joint_target_q`。
+  - `scripts/m9_dynamics.py`：三種模式整條軌跡（模擬 500 Hz、控制 250 Hz、先靜置 1 s），刀尖誤差／關節誤差／力矩圖。
+  - 影片與 USD 裡的工件改成會被切的高度圖實體網格（`replay.py` 的 `StockEvolver`、`removal.solid_from_heightmap`；碰撞仍用隱藏的方塊）。
+  - RTX 渲染變形工件的踩坑（花最多時間）：Kit 的 Fabric 場景代理**不會**跟著時間軸更新 mesh 的 `points` 時間取樣；把取樣寫回屬性、關掉 Fabric 代理、開檔後用 pxr 新增 prim 或改可見度都沒用（開檔後的編輯不進渲染）；可見度的時間取樣也不理。最後有效的做法：**開檔前**用 pxr 把每個時間取樣做成獨立的靜態 Mesh prim（另存 `scene_render.usd`，原 prim 停用），每個快照用**時間取樣的平移**切換（在自己的區間放在原位、其他時間放到地下 1 km；Kit 只可靠地跟隨 xform 的時間取樣）。還有兩個細節：Replicator 每步會把時間軸往前推半格（實測評估在 tc + 0.5），所以每個整數時間碼放兩個相同值的 key（k 與 k + 0.999）讓值被保持；時間軸要關 looping 並把結束時間延後，否則最後一幀會繞回 t = 0 或被夾在尾端。另一個坑：Newton 的 USD 把 `faceVertexIndices`／`faceVertexCounts`／`normals` 也寫成時間取樣、沒有預設值，`Get()` 不給時間會拿到 None，快照就沒有面。
+- **結果**（`outputs/m9_dynamics/sample_pocket_contour/`，10 mm 平刀、鋁、240 s）：
+  - 純 PD：起始姿態重力下垂 0.69 mm（z）；全程刀尖誤差最大 1.08 mm、平均 0.91 mm（幾乎都是重力下垂）。
+  - PD ＋ 重力前饋：靜置誤差 0；全程最大 0.31 mm（快速移動的加減速段）、平均 0.04 mm。
+  - 再加 M7 切削力（最大 83 N）：最大 0.90 mm、平均 0.28 mm，J5／J6 關節誤差最大 80／131 mdeg；關節力矩最大 J2 331 N·m、J3 292 N·m。
+  - 三種模式皆無 NaN；每種模式約 5–9 分鐘（與渲染共用 GPU 時）。
+- **注意**：質量／慣量由碰撞網格推算、PD 增益與力矩上限為佔位值；只說明「PD 位置控制在重力與切削負載下的誤差量級」，不代表 FANUC 控制器。

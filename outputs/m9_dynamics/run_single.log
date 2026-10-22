@@ -1,0 +1,164 @@
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /home/vc-zephyrus/.cache/warp/1.17.0
+Module milling_sim.removal 7756c3c load on device 'cuda:0' took 0.45 ms  (cached)
+cutting force series: max 103.8 N
+=== pd ===
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 0.87 ms  (cached)
+Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.42 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.61 ms  (cached)
+Module newton._src.solvers.mujoco.kernels ec35da1 load on device 'cuda:0' took 7.30 ms  (cached)
+Module mujoco_warp._src.set_const c0f8995 load on device 'cuda:0' took 1.82 ms  (cached)
+Module mujoco_warp._src.smooth 8d0d9ab load on device 'cuda:0' took 2.27 ms  (cached)
+Module _small_cholesky_factorize_block__locals__kernel_79a57364 20d25ea load on device 'cuda:0' took 0.34 ms  (cached)
+Module _small_cholesky_solve_block__locals__kernel_c4e2dcc2 4c4cbb4 load on device 'cuda:0' took 0.30 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.52 ms  (cached)
+Module mujoco_warp._src.constraint 8d4d513 load on device 'cuda:0' took 0.27 ms  (cached)
+Module _friction_dof__locals__kernel_f5f6cb7e f5f6cb7 load on device 'cuda:0' took 0.37 ms  (cached)
+Module _limit_slide_hinge__locals__kernel_3fb01e2e 3fb01e2 load on device 'cuda:0' took 0.37 ms  (cached)
+Module mujoco_warp._src.forward 0b590b4 load on device 'cuda:0' took 1.38 ms  (cached)
+Module mujoco_warp._src.passive 29de081 load on device 'cuda:0' took 0.89 ms  (cached)
+Module _qfrc_passive_kernel__locals__kernel_976399dd 976399d load on device 'cuda:0' took 0.28 ms  (cached)
+Module mujoco_warp._src.forward 10b70aa load on device 'cuda:0' took 1.20 ms  (cached)
+Module _qfrc_smooth__locals__kernel_8b823980 8b82398 load on device 'cuda:0' took 0.26 ms  (cached)
+Module mujoco_warp._src.support 770ef7d load on device 'cuda:0' took 0.33 ms  (cached)
+Module _small_cholesky_factorize_solve_block__locals__kernel_9da335f1 a5c2521 load on device 'cuda:0' took 0.32 ms  (cached)
+Module _solve_init_dof__locals__kernel_021c7a0e 021c7a0 load on device 'cuda:0' took 0.25 ms  (cached)
+Module mujoco_warp._src.solver 6f966b9 load on device 'cuda:0' took 0.90 ms  (cached)
+Module _solve_init_jaref_kernel__locals__kernel_147787f8 147787f load on device 'cuda:0' took 0.43 ms  (cached)
+Module mul_m_kernel__locals___mul_m_f3de1cc7 f3de1cc load on device 'cuda:0' took 0.37 ms  (cached)
+Module _update_constraint_efc__locals__kernel_0539aa50 0539aa5 load on device 'cuda:0' took 0.32 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_bd7ca2ec bd7ca2e load on device 'cuda:0' took 0.26 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_b20934d7 b20934d load on device 'cuda:0' took 0.26 ms  (cached)
+Module _update_gradient_grad__locals__kernel_c876081d c876081 load on device 'cuda:0' took 0.25 ms  (cached)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_1fd1ab4a acf1bfc load on device 'cuda:0' took 0.67 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_8ccb6386 ab2be5f load on device 'cuda:0' took 27.66 ms  (cached)
+Module _linesearch_iterative_kernel__locals__kernel_faec087e 8e38b7a load on device 'cuda:0' took 0.67 ms  (cached)
+Module _update_constraint_efc__locals__kernel_e953547e e953547 load on device 'cuda:0' took 0.41 ms  (cached)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_d92a3413 d92a341 load on device 'cuda:0' took 0.30 ms  (cached)
+Module _update_gradient_zero_grad_dot__locals__kernel_e9f8c963 e9f8c96 load on device 'cuda:0' took 0.26 ms  (cached)
+Module _update_gradient_grad__locals__kernel_87959044 8795904 load on device 'cuda:0' took 0.26 ms  (cached)
+Module _update_gradient_cholesky__locals__kernel_79d8a34d 7dcfdc9 load on device 'cuda:0' took 27.28 ms  (cached)
+Module _solve_done__locals__kernel_ce99440c ce99440 load on device 'cuda:0' took 0.34 ms  (cached)
+Module mujoco_warp._src.derivative 02a5c73 load on device 'cuda:0' took 0.71 ms  (cached)
+Module _next_time_builder__locals___next_time_bc454e15 bc454e1 load on device 'cuda:0' took 0.31 ms  (cached)
+  [pd] t=   0.0/240.4 s  tip err 0.741 mm  (0 s)
+  [pd] t=  10.0/240.4 s  tip err 0.939 mm  (10 s)
+  [pd] t=  20.0/240.4 s  tip err 1.067 mm  (20 s)
+  [pd] t=  30.0/240.4 s  tip err 0.979 mm  (31 s)
+  [pd] t=  40.0/240.4 s  tip err 0.782 mm  (41 s)
+  [pd] t=  50.0/240.4 s  tip err 0.781 mm  (51 s)
+  [pd] t=  60.0/240.4 s  tip err 1.014 mm  (94 s)
+  [pd] t=  70.0/240.4 s  tip err 1.068 mm  (132 s)
+  [pd] t=  80.0/240.4 s  tip err 0.912 mm  (172 s)
+  [pd] t=  90.0/240.4 s  tip err 0.781 mm  (206 s)
+  [pd] t= 100.0/240.4 s  tip err 0.900 mm  (227 s)
+  [pd] t= 110.0/240.4 s  tip err 0.899 mm  (250 s)
+  [pd] t= 120.0/240.4 s  tip err 0.955 mm  (273 s)
+  [pd] t= 130.0/240.4 s  tip err 0.954 mm  (301 s)
+  [pd] t= 140.0/240.4 s  tip err 0.885 mm  (328 s)
+  [pd] t= 150.0/240.4 s  tip err 0.900 mm  (354 s)
+  [pd] t= 160.0/240.4 s  tip err 0.968 mm  (381 s)
+  [pd] t= 170.0/240.4 s  tip err 0.897 mm  (395 s)
+  [pd] t= 180.0/240.4 s  tip err 0.928 mm  (406 s)
+  [pd] t= 190.0/240.4 s  tip err 0.946 mm  (417 s)
+  [pd] t= 200.0/240.4 s  tip err 0.867 mm  (434 s)
+  [pd] t= 210.0/240.4 s  tip err 0.931 mm  (459 s)
+  [pd] t= 220.0/240.4 s  tip err 0.947 mm  (484 s)
+  [pd] t= 230.0/240.4 s  tip err 0.822 mm  (506 s)
+  [pd] t= 240.0/240.4 s  tip err 0.819 mm  (520 s)
+{"mode": "pd", "finite": true, "settle_sag_mm": [-0.3003, 0.0233, -0.6895], "tip_err_max_mm": 1.0764, "tip_err_mean_mm": 0.9136, "tip_err_z_min_mm": -1.0439, "joint_err_max_mdeg": [8.105112978646341, 28.31882092866895, 31.090184323291286, 31.615884478451076, 33.90217005223092, 22.57469423880452], "tau_max_Nm": [59.247346728137074, 331.4010910894753, 291.67761570985937, 5.243555448797845, 8.27460358099673, 1.3622168275933932], "wall_time_s": 521.0336, "n_ticks": 60111}
+=== pd_gff ===
+  [pd_gff] t=   0.0/240.4 s  tip err 0.023 mm  (0 s)
+  [pd_gff] t=  10.0/240.4 s  tip err 0.040 mm  (24 s)
+  [pd_gff] t=  20.0/240.4 s  tip err 0.040 mm  (49 s)
+  [pd_gff] t=  30.0/240.4 s  tip err 0.040 mm  (73 s)
+  [pd_gff] t=  40.0/240.4 s  tip err 0.040 mm  (88 s)
+  [pd_gff] t=  50.0/240.4 s  tip err 0.040 mm  (114 s)
+  [pd_gff] t=  60.0/240.4 s  tip err 0.040 mm  (139 s)
+  [pd_gff] t=  70.0/240.4 s  tip err 0.040 mm  (159 s)
+  [pd_gff] t=  80.0/240.4 s  tip err 0.040 mm  (179 s)
+  [pd_gff] t=  90.0/240.4 s  tip err 0.040 mm  (204 s)
+  [pd_gff] t= 100.0/240.4 s  tip err 0.222 mm  (229 s)
+  [pd_gff] t= 110.0/240.4 s  tip err 0.015 mm  (252 s)
+  [pd_gff] t= 120.0/240.4 s  tip err 0.038 mm  (264 s)
+  [pd_gff] t= 130.0/240.4 s  tip err 0.040 mm  (283 s)
+  [pd_gff] t= 140.0/240.4 s  tip err 0.040 mm  (309 s)
+  [pd_gff] t= 150.0/240.4 s  tip err 0.040 mm  (338 s)
+  [pd_gff] t= 160.0/240.4 s  tip err 0.039 mm  (363 s)
+  [pd_gff] t= 170.0/240.4 s  tip err 0.015 mm  (391 s)
+  [pd_gff] t= 180.0/240.4 s  tip err 0.039 mm  (424 s)
+  [pd_gff] t= 190.0/240.4 s  tip err 0.039 mm  (438 s)
+  [pd_gff] t= 200.0/240.4 s  tip err 0.040 mm  (450 s)
+  [pd_gff] t= 210.0/240.4 s  tip err 0.040 mm  (463 s)
+  [pd_gff] t= 220.0/240.4 s  tip err 0.040 mm  (475 s)
+  [pd_gff] t= 230.0/240.4 s  tip err 0.040 mm  (487 s)
+  [pd_gff] t= 240.0/240.4 s  tip err 0.149 mm  (499 s)
+{"mode": "pd_gff", "finite": true, "settle_sag_mm": [-0.0, -0.0, -0.0], "tip_err_max_mm": 0.3103, "tip_err_mean_mm": 0.0416, "tip_err_z_min_mm": -0.0901, "joint_err_max_mdeg": [8.105112978646341, 16.610170565108643, 13.53424870217312, 27.954236072663107, 17.410678301235137, 22.573973867290494], "tau_max_Nm": [59.24796140103632, 331.0152850930294, 291.68912458957556, 5.243325218971573, 8.27429608346517, 1.3622197535354466], "wall_time_s": 499.5415, "n_ticks": 60111}
+=== pd_gff_cut ===
+  [pd_gff_cut] t=   0.0/240.4 s  tip err 0.023 mm  (0 s)
+  [pd_gff_cut] t=  10.0/240.4 s  tip err 0.178 mm  (13 s)
+  [pd_gff_cut] t=  20.0/240.4 s  tip err 0.318 mm  (26 s)
+  [pd_gff_cut] t=  30.0/240.4 s  tip err 0.374 mm  (39 s)
+  [pd_gff_cut] t=  40.0/240.4 s  tip err 0.356 mm  (52 s)
+  [pd_gff_cut] t=  50.0/240.4 s  tip err 0.040 mm  (65 s)
+  [pd_gff_cut] t=  60.0/240.4 s  tip err 0.178 mm  (77 s)
+  [pd_gff_cut] t=  70.0/240.4 s  tip err 0.315 mm  (90 s)
+  [pd_gff_cut] t=  80.0/240.4 s  tip err 0.373 mm  (103 s)
+  [pd_gff_cut] t=  90.0/240.4 s  tip err 0.352 mm  (115 s)
+  [pd_gff_cut] t= 100.0/240.4 s  tip err 0.222 mm  (128 s)
+  [pd_gff_cut] t= 110.0/240.4 s  tip err 0.174 mm  (140 s)
+  [pd_gff_cut] t= 120.0/240.4 s  tip err 0.157 mm  (152 s)
+  [pd_gff_cut] t= 130.0/240.4 s  tip err 0.306 mm  (165 s)
+  [pd_gff_cut] t= 140.0/240.4 s  tip err 0.298 mm  (177 s)
+  [pd_gff_cut] t= 150.0/240.4 s  tip err 0.229 mm  (190 s)
+  [pd_gff_cut] t= 160.0/240.4 s  tip err 0.089 mm  (202 s)
+  [pd_gff_cut] t= 170.0/240.4 s  tip err 0.137 mm  (215 s)
+  [pd_gff_cut] t= 180.0/240.4 s  tip err 0.037 mm  (227 s)
+  [pd_gff_cut] t= 190.0/240.4 s  tip err 0.012 mm  (240 s)
+  [pd_gff_cut] t= 200.0/240.4 s  tip err 0.518 mm  (252 s)
+  [pd_gff_cut] t= 210.0/240.4 s  tip err 0.275 mm  (264 s)
+  [pd_gff_cut] t= 220.0/240.4 s  tip err 0.114 mm  (277 s)
+  [pd_gff_cut] t= 230.0/240.4 s  tip err 0.191 mm  (289 s)
+  [pd_gff_cut] t= 240.0/240.4 s  tip err 0.149 mm  (300 s)
+{"mode": "pd_gff_cut", "finite": true, "settle_sag_mm": [-0.0, -0.0, -0.0], "tip_err_max_mm": 0.9023, "tip_err_mean_mm": 0.2765, "tip_err_z_min_mm": -0.2365, "joint_err_max_mdeg": [8.124037425718472, 16.610170565108643, 19.209655776039526, 27.954236072663107, 80.03890546529848, 131.21798026139803], "tau_max_Nm": [125.11887798616996, 331.0152850930294, 291.68912458957556, 5.243325218971573, 23.22495582381397, 24.28025513600807], "wall_time_s": 300.8115, "n_ticks": 60111}
+{
+  "pass": true,
+  "modes": {
+    "pd": {
+      "tip_err_max_mm": 1.0763538805071995,
+      "tip_err_mean_mm": 0.9135968235218097,
+      "settle_sag_mm": [
+        -0.3003,
+        0.0233,
+        -0.6895
+      ],
+      "wall_time_s": 521.0335679159998
+    },
+    "pd_gff": {
+      "tip_err_max_mm": 0.3102546088762051,
+      "tip_err_mean_mm": 0.04157987537540549,
+      "settle_sag_mm": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "wall_time_s": 499.54148913899917
+    },
+    "pd_gff_cut": {
+      "tip_err_max_mm": 0.9022944970317975,
+      "tip_err_mean_mm": 0.27646443224063844,
+      "settle_sag_mm": [
+        -0.0,
+        -0.0,
+        -0.0
+      ],
+      "wall_time_s": 300.81147701400005
+    }
+  }
+}
+exit=0

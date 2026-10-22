@@ -188,7 +188,7 @@ def material_removal(cell: CellConfig, trajs: dict[str, JointTrajectory], tools:
             "deflection_max_mm": float(np.linalg.norm(dev, axis=1).max() * 1e3),
             "joint_torque_max_Nm": np.abs(tau).max(axis=0).round(2).tolist(),
         }
-        series[n] = {"t": tr.t, "mrr": mrr, "force": F_mag, "deflection_mm": np.linalg.norm(dev, axis=1) * 1e3}
+        series[n] = {"t": tr.t, "mrr": mrr, "force": F_mag, "force_vec_world": F_w, "deflection_mm": np.linalg.norm(dev, axis=1) * 1e3}
     Z = hm.numpy()
     progress(0.98, "材料移除完成")
     return RemovalResult(hm, per_robot, float(hm.removed_volume() * 1e9), float((hm.z_top - Z).max() * 1e3), series)

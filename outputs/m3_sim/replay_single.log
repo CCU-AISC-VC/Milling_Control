@@ -5,30 +5,34 @@ Warp 1.17.0 initialized:
      "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
    Kernel cache:
      /home/vc-zephyrus/.cache/warp/1.17.0
-Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.09 ms  (cached)
-Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.92 ms  (cached)
-Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 1.03 ms  (cached)
-Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.60 ms  (cached)
-Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 0.78 ms  (cached)
-Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.35 ms  (cached)
-Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 2.00 ms  (cached)
-Module narrow_phase_gjk_mpr_True_False_write_contact_support_map_default 828685a load on device 'cuda:0' took 2.49 ms  (cached)
-Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 2.54 ms  (cached)
-Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 0.99 ms  (cached)
-Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 2.00 ms  (cached)
-Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 1.14 ms  (cached)
-Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.85 ms  (cached)
-Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 2.19 ms  (cached)
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.23 ms  (cached)
+Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.43 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.55 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.58 ms  (cached)
+Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 0.52 ms  (cached)
+Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.50 ms  (cached)
+Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 0.53 ms  (cached)
+Module narrow_phase_gjk_mpr_True_False_write_contact_support_map_default 828685a load on device 'cuda:0' took 2.10 ms  (cached)
+Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 1.72 ms  (cached)
+Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 0.55 ms  (cached)
+Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 2.03 ms  (cached)
+Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 0.56 ms  (cached)
+Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.45 ms  (cached)
+Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 1.96 ms  (cached)
+Module newton._src.utils.mesh 92b663b load on device 'cpu' took 0.87 ms  (cached)
+Module milling_sim.removal 7756c3c load on device 'cuda:0' took 0.45 ms  (cached)
 USD output saved in: /mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/scene_tmp.usd
-Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 0.64 ms  (cached)
-Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 1.25 ms  (cached)
-Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.92 ms  (cached)
-Module newton._src.utils.render f02db3b load on device 'cuda:0' took 5.02 ms  (cached)
+Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 0.58 ms  (cached)
+Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 0.96 ms  (cached)
+Module warp.utils 1de54f6 load on device 'cuda:0' took 0.54 ms  (cached)
+Module newton._src.utils.mesh b7d1752 load on device 'cuda:0' took 0.76 ms  (cached)
+Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.58 ms  (cached)
+Module newton._src.utils.render f02db3b load on device 'cuda:0' took 0.34 ms  (cached)
 {
   "checks": {
     "n_frames": 14427,
     "sim_hz": 60.0,
-    "replay_time_s": 58.66367571799947,
+    "replay_time_s": 29.791421427999012,
     "tcp_err_max_mm": 0.0010106326720965776,
     "tcp_err_mean_mm": 0.00027081820595825184,
     "n_unexpected_collision_frames": 0,

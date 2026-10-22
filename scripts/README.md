@@ -15,8 +15,9 @@
 | `m4_compare_sim_vs_ros.py` | M4 | 錄到的關節曲線 vs 軌跡檔（`--session`、`--traj`、`--label`） | `compare.png`、`compare_summary.json` |
 | `m6_dual_replay.py` | M6 | 多台機器人共用時間軸重播（`--traj robot=dir` 可重複、`--cell`、`--views`、`--video-speed`）：追蹤、機器人間淨空（Warp mesh 查詢）、碰撞分類、三視角 GL 影片、USD | `outputs/m6_dual/`：`replay.csv`、`tracking_clearance.png`、`replay_{overview,closeup,side}.{mp4,gif}`、`frame_*.png`、`scene.usd`、`summary.json` |
 
-`m3_render_isaacsim.py --cell <cell.yaml> --camera <name>`：用 cell 設定重畫圍籬／地板／控制櫃（USD 材質、護板半透明）並用設定檔的相機。
+`m3_render_isaacsim.py --cell <cell.yaml> --camera <name>`：用 cell 設定重畫圍籬／地板／控制櫃（USD 材質、護板半透明）並用設定檔的相機。切削中的工件（USD 的變形網格）會先轉成快照 prim 存成 `scene_render.usd` 再逐幀切換可見度（Kit 不吃變形網格的時間取樣）。`m3_sim_replay.py`／`m6_dual_replay.py` 預設把工件畫成被切的高度圖（`--no-machined-stock` 關閉）。
 | `m7_material_removal.py` | M7 | 高度圖材料移除、MRR、切削力、靜態偏移（`--traj robot=dir` 可重複、`--cell`、`--tool`、`--material`、`--resolution-mm`） | `outputs/m7_removal/<name>/`：`heightmap.png`、`surface_3d.png`、`mrr_force_deflection.png`、`removal.csv`、`heightmap_depth_mm.npy`、`summary.json` |
+| `m9_dynamics.py` | M9 | Newton 動力學：關節 PD、重力、重力前饋、切削外力（`--traj`、`--modes pd,pd_gff,pd_gff_cut`、`--duration`、`--sim-dt`、`--control-hz`） | `outputs/m9_dynamics/<stem>/`：`dyn_<mode>.csv`、`tip_error_torque.png`、`joint_errors.png`、`summary.json` |
 | `m8_ui.py` | M8 | 學生網頁 UI（viser，`--port`） | 瀏覽器 <http://localhost:8080>；匯出到 `outputs/ui/` |
 
 測試：`~/envs/aisc_sim/bin/python -m unittest discover -s tests -v`（G-code 16 個、材料移除 3 個）

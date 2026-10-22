@@ -1,4 +1,4 @@
-# 階段性進度報告：M0–M8
+# 階段性進度報告：M0–M9
 
 更新日期：2026-10-22 · 路線圖：`plans/2026-10-22_00_roadmap.md` · 逐筆紀錄：`docs/DEVLOG.md`
 
@@ -12,6 +12,7 @@
 | M6 | 雙機協作 | ✅ 完成：兩台共用工件、無互撞（最小淨空 78.5 mm）、圍籬、RTX 影片 |
 | M7 | 刀具與材料移除 | ✅ 完成：刀具庫、刀尖 IK 與碰撞體、2.5D 高度圖、切削力與偏移估計 |
 | M8 | 學生操作 UI | ✅ 完成：viser 網頁，`docs/UI_GUIDE.md` |
+| M9 | Newton 動力學 | ✅ 完成：關節 PD ＋ 重力（前饋後 0.04 mm）＋ 切削外力（0.28 mm）；影片裡工件會被切 |
 
 ---
 
@@ -148,3 +149,23 @@ TCP 追蹤誤差最大 0.0012 mm；非預期碰撞 0 frames；主軸–工件最
 ## M8：學生操作 UI
 
 `scripts/m8_ui.py` 起 viser 網頁（<http://localhost:8080>）：選 cell、上傳 G-code、刀具庫與自訂刀具、工件位置、材料；一鍵執行（解析 → IK → Newton 碰撞 → 材料移除）、3D 動畫、結果、匯出軌跡給 bridge。指南：`docs/UI_GUIDE.md`。
+
+---
+
+## M9：Newton 動力學與切削工件渲染
+
+| 項目 | 內容 |
+|---|---|
+| 求解器 | `SolverMuJoCo`（implicitfast）、模擬 500 Hz、控制 250 Hz、關節 PD 位置致動器 |
+| 模式 | 純 PD；PD ＋ 重力前饋（τ_g 由 Newton 質量算）；再加 M7 切削力當刀尖外力 |
+| 工件 | 影片與 RTX 裡的工件是隨時間被切的高度圖實體網格 |
+
+![M9 刀尖誤差與力矩](../outputs/m9_dynamics/sample_pocket_contour/tip_error_torque.png)
+
+| 模式 | 刀尖誤差最大 | 平均 |
+|---|---|---|
+| 純 PD（重力下垂） | 1.08 mm | 0.91 mm |
+| PD ＋ 重力前饋 | 0.31 mm | 0.04 mm |
+| ＋ 切削力 | 0.90 mm | 0.28 mm |
+
+質量、PD 增益、力矩上限皆為佔位值，只看量級與趨勢。RTX 影片（`outputs/*/rtx_closeup/`）現在看得到工件被逐步切出輪廓、口袋與槽。

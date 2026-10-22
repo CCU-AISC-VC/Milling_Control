@@ -6,7 +6,7 @@
   "checks": {
     "n_frames": 14427,
     "sim_hz": 60.0,
-    "replay_time_s": 58.66367571799947,
+    "replay_time_s": 29.791421427999012,
     "tcp_err_max_mm": 0.0010106326720965776,
     "tcp_err_mean_mm": 0.00027081820595825184,
     "n_unexpected_collision_frames": 0,
