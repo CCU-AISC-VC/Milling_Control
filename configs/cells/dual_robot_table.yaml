@@ -6,10 +6,12 @@ robots:
     robot: configs/robots/fanuc_m710id70_spindle.yaml
     base_xyz_m: [0.0, 0.0, 0.0]
     base_rpy_rad: [0.0, 0.0, 0.0]
+    tool: configs/tools/flat_10mm.yaml
   - name: fanuc_2
     robot: configs/robots/fanuc_m710id70_spindle.yaml
     base_xyz_m: [3.0, 0.0, 0.0]
     base_rpy_rad: [0.0, 0.0, 3.141592653589793]
+    tool: configs/tools/flat_6mm.yaml
 table:
   center_xy_m: [1.5, 0.0]
   size_xyz_m: [1.0, 1.2, 0.70]
@@ -39,9 +41,6 @@ workpiece:
   origin_xyz_m: [1.2, -0.1, 0.75]
   origin_rpy_rad: [0.0, 0.0, 0.0]
   stock_size_xyz_mm: [600.0, 200.0, 50.0]
-tool:
-  diameter_mm: 10.0
-  length_from_tcp_mm: 0.0
 environment:
   floor:
     center_xy_m: [1.5, 0.0]

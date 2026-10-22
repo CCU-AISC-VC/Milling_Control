@@ -10,6 +10,17 @@
     0.0,
     0.0
   ],
+  "tool": {
+    "name": "flat_10mm",
+    "type": "flat",
+    "diameter_mm": 10.0,
+    "flute_length_mm": 25.0,
+    "length_from_nose_mm": 60.0,
+    "shank_diameter_mm": 10.0,
+    "flutes": 2,
+    "max_rpm": 12000.0,
+    "config": "configs/tools/flat_10mm.yaml"
+  },
   "T_base_program": [
     [
       1.0,
@@ -58,76 +69,76 @@
     "seed": 0,
     "preferred_state": "home",
     "n_candidates": 82,
-    "n_converged": 37,
-    "n_with_margin": 37,
-    "dist_to_ref_deg": 63.88118626510099,
-    "limit_margin": 0.21859245605745015,
-    "manipulability": 0.41501268835380256,
+    "n_converged": 36,
+    "n_with_margin": 36,
+    "dist_to_ref_deg": 60.46867538859299,
+    "limit_margin": 0.23121074246450846,
+    "manipulability": 0.3870659749843904,
     "q0_deg": [
-      -4.822,
-      -10.291,
-      -49.296,
-      0.378,
-      39.004,
-      -0.294
+      -4.844,
+      -12.595,
+      -47.495,
+      0.576,
+      34.901,
+      -0.472
     ]
   },
   "checks": {
-    "ik_pos_err_max_mm": 0.0016555019136942298,
-    "ik_dir_err_max_deg": 0.0011458691574362753,
-    "fk_pos_err_max_mm": 0.0016555019136942298,
-    "fk_dir_err_max_deg": 0.0011458701548547837,
+    "ik_pos_err_max_mm": 0.0012143343710630339,
+    "ik_dir_err_max_deg": 0.001145841563361836,
+    "fk_pos_err_max_mm": 0.0012143343710630339,
+    "fk_dir_err_max_deg": 0.0011458412102939783,
     "n_not_converged": 0,
-    "iters_mean": 2.0088333840999084,
+    "iters_mean": 2.491014316174231,
     "max_step_deg_per_joint": [
-      0.0721,
-      0.0704,
-      0.0651,
-      0.2487,
-      0.0709,
-      0.1901
+      0.065,
+      0.0714,
+      0.0637,
+      0.1831,
+      0.0676,
+      0.1476
     ],
-    "max_step_deg": 0.24874271604335638,
+    "max_step_deg": 0.1831290079115157,
     "vel_ratio_max_per_joint": [
-      0.0195,
-      0.0316,
-      0.0266,
-      0.0575,
-      0.0268,
-      0.0316
+      0.0197,
+      0.032,
+      0.026,
+      0.0435,
+      0.0259,
+      0.0251
     ],
-    "vel_ratio_max": 0.05751556504543823,
+    "vel_ratio_max": 0.04353762490456948,
     "acc_ratio_max_per_joint": [
-      0.0872,
-      0.2609,
-      0.1963,
-      0.1779,
-      0.1056,
-      0.1043
+      0.088,
+      0.2461,
+      0.2042,
+      0.13,
+      0.1049,
+      0.0799
     ],
-    "limit_margin_min": 0.21859245605745015,
-    "manipulability_min": 0.41048587205363335,
+    "limit_margin_min": 0.23121074246450846,
+    "manipulability_min": 0.38222031721056243,
     "q_range_deg": {
       "min": [
-        -4.82,
-        -10.7,
-        -49.3,
-        -4.36,
-        38.31,
-        -3.19
+        -4.84,
+        -12.94,
+        -47.49,
+        -3.61,
+        34.23,
+        -2.84
       ],
       "max": [
-        3.62,
-        1.82,
-        -38.26,
-        4.17,
-        40.29,
-        3.37
+        3.65,
+        -0.3,
+        -36.69,
+        3.52,
+        36.5,
+        2.94
       ]
     },
     "newton_fk_check": {
       "n_checked": 206,
-      "pos_err_max_mm": 0.001338370701481368
+      "pos_err_max_mm": 0.0013768451479972473
     },
     "pass": true,
     "gate": {
@@ -138,13 +149,13 @@
     }
   },
   "velocity_scale": 0.5,
-  "ik_time_s": 3.262624863000383,
+  "ik_time_s": 3.822783602000527,
   "env": {
     "python": "3.12.15",
     "numpy": "2.5.1"
   },
   "format_version": 1,
-  "created_utc": "2026-10-22T10:44:08+00:00",
+  "created_utc": "2026-10-22T11:15:12+00:00",
   "joint_names": [
     "J1",
     "J2",

@@ -6,45 +6,58 @@
   "checks": {
     "n_frames": 14427,
     "sim_hz": 60.0,
-    "replay_time_s": 32.92396220799992,
-    "tcp_err_max_mm": 0.0012327139110745087,
-    "tcp_err_mean_mm": 0.00026958728003746414,
+    "replay_time_s": 58.66367571799947,
+    "tcp_err_max_mm": 0.0010106326720965776,
+    "tcp_err_mean_mm": 0.00027081820595825184,
     "n_unexpected_collision_frames": 0,
     "unexpected_first": [],
-    "spindle_stock_min_mm": -2.0010185724771596,
-    "programmed_max_depth_mm": 6.000641999999945,
-    "mesh_tip_offset_mm": 4.0,
-    "expected_deepest_mm": -2.000641999999945,
-    "other_pairs_min_mm": 47.99889613745255,
-    "pair_min_mm": {
-      "fanuc_1/J4_link | stock": 128.731,
-      "fanuc_1/J4_link | table": 140.057,
-      "fanuc_1/J5_link | stock": 97.373,
-      "fanuc_1/J5_link | table": 127.434,
-      "fanuc_1/J6_link | stock": 101.497,
-      "fanuc_1/J6_link | table": 151.497,
-      "fanuc_1/spindle_link | stock": -2.001,
-      "fanuc_1/spindle_link | table": 47.999
+    "spindle_stock_min_mm": -6.000599863015661,
+    "programmed_max_depth_mm": 6.000381091649748,
+    "expected_deepest_mm": -6.000381091649748,
+    "tool": {
+      "name": "flat_10mm",
+      "type": "flat",
+      "diameter_mm": 10.0,
+      "flute_length_mm": 25.0,
+      "length_from_nose_mm": 60.0,
+      "shank_diameter_mm": 10.0,
+      "flutes": 2,
+      "max_rpm": 12000.0,
+      "config": "configs/tools/flat_10mm.yaml"
     },
+    "other_pairs_min_mm": 43.99944125353163,
+    "robot_env_min_mm": null,
+    "pair_min_mm": {
+      "fanuc_1/J4_link | stock": 180.699,
+      "fanuc_1/J5_link | fanuc_1/tool": 177.3,
+      "fanuc_1/J5_link | stock": 156.986,
+      "fanuc_1/J5_link | table": 187.869,
+      "fanuc_1/J6_link | fanuc_1/tool": 157.42,
+      "fanuc_1/J6_link | stock": 161.497,
+      "fanuc_1/spindle_link | stock": 57.999,
+      "fanuc_1/spindle_link | table": 107.999,
+      "fanuc_1/tool | stock": -6.001,
+      "fanuc_1/tool | table": 43.999
+    },
+    "penetration_tol_mm": 0.05,
     "pass": true,
     "gate": {
       "tcp_err_mm": 0.1,
       "unexpected": 0,
-      "depth_tol_mm": 1.0,
-      "penetration_tol_mm": 0.05
+      "depth_tol_mm": 1.0
     }
   },
   "media": {
     "usd": "outputs/m3_sim/sample_pocket_contour/scene.usd",
     "usd_frames": 723,
     "overview": {
-      "mp4": "outputs/m3_sim/sample_pocket_contour/replay_overview.mp4",
-      "gif": "outputs/m3_sim/sample_pocket_contour/replay_overview.gif",
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.gif",
       "frames": 723
     },
     "closeup": {
-      "mp4": "outputs/m3_sim/sample_pocket_contour/replay_closeup.mp4",
-      "gif": "outputs/m3_sim/sample_pocket_contour/replay_closeup.gif",
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.gif",
       "frames": 723
     }
   },

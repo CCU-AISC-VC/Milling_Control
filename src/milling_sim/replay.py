@@ -20,6 +20,7 @@ import pandas as pd
 from .cell import CellConfig
 from .clearance import CONTACT_TOL, MeshClearance
 from .sim import CellScene, in_stock_allowed_mask
+from .tool import ToolConfig
 from .traj_io import JointTrajectory
 
 PENETRATION_TOL = 5e-5  # m, box-vs-mesh contacts from the Newton pipeline
@@ -43,7 +44,8 @@ def _robot_of(role: str) -> str | None:
 
 
 def _is_spindle(role: str, spindle_link: str = "spindle_link") -> bool:
-    return role.endswith("/" + spindle_link) and not role.startswith("env/")
+    """Spindle body or the mounted tool cylinder (both are allowed inside the stock while cutting)."""
+    return (role.endswith("/" + spindle_link) or role.endswith("/tool")) and not role.startswith("env/")
 
 
 def frame_tables(trajs: dict[str, JointTrajectory], cell: CellConfig, sim_hz: float):
@@ -74,6 +76,9 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
     times, Q, P_ref_w, allowed, cutting, z_prog = frame_tables(trajs, cell, sim_hz)
     names = list(trajs)
     tcp_links = {n: cell.robot(n).robot.tcp_link for n in names}
+    tool_len = {n: (ToolConfig.from_meta(trajs[n].meta.get("tool")).length_from_nose if trajs[n].meta.get("tool") else 0.0) for n in names}
+    tool_axis = {n: np.asarray(cell.robot(n).robot.tool_axis_in_tcp, dtype=float) for n in names}
+    tip_offsets = {n: (0.0 if trajs[n].meta.get("tool") else tip_offsets.get(n, 0.0)) for n in names}  # with a tool shape the tip is exact
     clearance = MeshClearance(scene, names) if len(names) >= 2 else None
     d_rr, pair_rr = np.inf, None
     rows = []
@@ -86,7 +91,8 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
         scene.eval_fk()
         row = {"t": t}
         for n in names:
-            tcp = scene.link_pose(n, tcp_links[n])[:3, 3]
+            T_nose = scene.link_pose(n, tcp_links[n])
+            tcp = T_nose[:3, 3] + (T_nose[:3, :3] @ tool_axis[n]) * tool_len[n]
             row[f"{n}_tcp_err_mm"] = float(np.linalg.norm(tcp - P_ref_w[n][i])) * 1e3
             row[f"{n}_spindle_stock_mm"] = np.inf
             row[f"{n}_z_prog_mm"] = z_prog[n][i] * 1e3

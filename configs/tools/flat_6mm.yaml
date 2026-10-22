@@ -1,0 +1,8 @@
+name: flat_6mm
+type: flat
+diameter_mm: 6.0
+flute_length_mm: 18.0
+length_from_nose_mm: 50.0
+shank_diameter_mm: 6.0
+flutes: 3
+max_rpm: 16000

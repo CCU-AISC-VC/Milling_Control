@@ -1,4 +1,4 @@
-# 階段性進度報告：M0–M6
+# 階段性進度報告：M0–M8
 
 更新日期：2026-10-22 · 路線圖：`plans/2026-10-22_00_roadmap.md` · 逐筆紀錄：`docs/DEVLOG.md`
 
@@ -10,6 +10,8 @@
 | M3 | Newton 模擬與 Isaac Sim 渲染 | ✅ 完成：TCP 追蹤 0.0012 mm、非預期碰撞 0、RTX 影片 |
 | M4 | Sim2Real 介面 | ✅ 假硬體通過：最大誤差 0.00069 rad（補償 10 ms 延遲後 0.00010 rad）；真機待 FANUC 電腦驗證 |
 | M6 | 雙機協作 | ✅ 完成：兩台共用工件、無互撞（最小淨空 78.5 mm）、圍籬、RTX 影片 |
+| M7 | 刀具與材料移除 | ✅ 完成：刀具庫、刀尖 IK 與碰撞體、2.5D 高度圖、切削力與偏移估計 |
+| M8 | 學生操作 UI | ✅ 完成：viser 網頁，`docs/UI_GUIDE.md` |
 
 ---
 
@@ -126,3 +128,23 @@ TCP 追蹤誤差最大 0.0012 mm；非預期碰撞 0 frames；主軸–工件最
 兩台 TCP 追蹤誤差 ≤ 0.0011 mm；非預期碰撞 0 frames；兩台之間最小淨空 78.5 mm（兩支主軸）；與圍籬、控制櫃無接觸；主軸–工件深度與程式一致。影片：`outputs/m6_dual/replay_{overview,closeup,side}.mp4`、`rtx_{overview,closeup,side}/render_*.mp4`（不進 git）。
 
 要記得：擺位、工件、圍籬尺寸都是佔位值（SPEC ⚠️ UNVERIFIED）；Newton 的 mesh–mesh 接觸候選不能當淨空（DEVLOG 2026-10-22 M6）。
+
+---
+
+## M7：刀具與材料移除
+
+| 項目 | 內容 |
+|---|---|
+| 刀具 | `configs/tools/`（flat 10／6 mm、ball 8 mm）；刀尖 = 鼻端 + 長度 × 刀軸；IK 目標、Newton 圓柱碰撞體、視覺 |
+| 材料移除 | 2.5D 高度圖（0.5 mm），Warp kernel，單元測試對解析體積 < 2% |
+| 力與偏移 | k_c × MRR／v_c；關節扭轉彈簧靜態柔性（佔位參數） |
+
+| 加工後高度圖（單機） | MRR／力／偏移 |
+|---|---|
+| ![heightmap](../outputs/m7_removal/sample_pocket_contour/heightmap.png) | ![mrr](../outputs/m7_removal/sample_pocket_contour/mrr_force_deflection.png) |
+
+單機：移除 55,812 mm³、最深 6.00 mm、力最大 83 N、刀尖偏移最大 0.39 mm。雙機共用工件：總移除 88,426 mm³（`outputs/m7_removal/dual_shared_stock/`）。
+
+## M8：學生操作 UI
+
+`scripts/m8_ui.py` 起 viser 網頁（<http://localhost:8080>）：選 cell、上傳 G-code、刀具庫與自訂刀具、工件位置、材料；一鍵執行（解析 → IK → Newton 碰撞 → 材料移除）、3D 動畫、結果、匯出軌跡給 bridge。指南：`docs/UI_GUIDE.md`。

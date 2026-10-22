@@ -6,6 +6,7 @@ robots:
     robot: configs/robots/fanuc_m710id70_spindle.yaml
     base_xyz_m: [0.0, 0.0, 0.0]
     base_rpy_rad: [0.0, 0.0, 0.0]
+    tool: configs/tools/flat_10mm.yaml
 table:
   # Static box; top face at z = table_top_z. Dimensions are placeholders (UNVERIFIED).
   center_xy_m: [1.4, 0.0]
@@ -20,6 +21,4 @@ workpiece:
   origin_xyz_m: [1.3, -0.1, 0.75]
   origin_rpy_rad: [0.0, 0.0, 0.0]
   stock_size_xyz_mm: [200.0, 200.0, 50.0]  # stock sits on the table top, origin at its top corner
-tool:
-  diameter_mm: 10.0
-  length_from_tcp_mm: 0.0  # TCP is taken at the tool tip
+# (legacy) tool block replaced by robots[].tool -> configs/tools/*.yaml (M7)

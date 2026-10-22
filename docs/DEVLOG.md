@@ -111,3 +111,23 @@
   - USD prim 名稱不能有 `-`／`+`，而且 `fence_panel_-y_0` 與 `fence_panel_+y_0` 消毒後會撞名，要加索引。
 - **結果**（`outputs/m6_dual/`）：18,731 frames（312 s @ 60 Hz）重播 250 s，62,852 次網格查詢；fanuc_1 TCP 追蹤最大 0.0011 mm、fanuc_2 0.0007 mm；**非預期碰撞 0 frames**；**兩台之間最小淨空 78.5 mm**（兩支主軸，約 t = 14 s，兩台都在靠中間的邊緣）；機器人與圍籬／控制櫃全程沒有接觸候選（> 接觸管線的搜尋範圍）；主軸–工件最深 −2.001／−1.001 mm = 程式最深 6／5 mm − 4 mm。GL 影片三個視角（10 倍速）；Isaac Sim RTX：overview 300 幀環繞 50°、148 s；closeup 與 side 各 300 幀。**M6 通過（佔位擺位下）。**
 - **下一步**：擺位、工件、圍籬尺寸全部要以實際 cell 量測取代（SPEC §2.2 ⚠️）；工件掛在第二台 TCP 的模式尚未做；兩台的真機驅動要兩個 `fanuc_ros2_driver` 命名空間，bridge 要加 `--robot` 前綴。
+
+## 2026-10-22 ｜ M7：刀具庫、材料移除、切削力與偏移
+
+- **做了什麼**：
+  - `src/milling_sim/tool.py` ＋ `configs/tools/{flat_10mm,flat_6mm,ball_8mm}.yaml`：刀尖 = 主軸鼻端（`spindle_tcp`）+ 長度 × 刀軸。`ik.py` 以刀尖為目標（刀尖 Jacobian = J_v − [r]× J_ω）；cell `robots[].tool`；`sim.py` 在主軸 link 上加鼻端→刀尖的圓柱碰撞體（角色 `<robot>/tool`）；軌跡檔 `x y z` 改為刀尖、`meta.tool`。
+  - `src/milling_sim/removal.py`：Warp 高度圖，每對切削樣本掃 2D 膠囊，區間內取最低刀底（修過：純下刀時 L2 = 0 要取 min(z0, z1)，一般段要解二次式取區間端點與最近點）；`tests/test_removal.py`（直槽體積誤差 < 2%、球刀剖面、重切不移除、力的單位）。
+  - `src/milling_sim/cutting.py`：k_c × MRR／v_c 的切削力、固定比例的徑向與軸向分量；關節扭轉彈簧的靜態刀尖偏移與關節力矩。`configs/materials.yaml`、robot YAML 的 `joint_stiffness_Nm_rad`（都是量級佔位 ⚠️）。
+  - `scripts/m7_material_removal.py`（單機與多機，樣本依全域時間合併）；`scripts/m3_sim_replay.py` 改用 `replay.py`（刀具角色、刀尖追蹤），與 M6 腳本同一條管線。
+- **結果**：
+  - 單機範例（10 mm 平刀，鋁 6061）：移除 55,812 mm³、最深 6.00 mm（高度圖看得到輪廓槽 4 mm、口袋 6 mm 含螺旋入刀留下的中心小島、S 槽 2 mm）；MRR 最大 451 mm³/s；力最大 83 N（平均 50 N）；刀尖靜態偏移最大 0.39 mm（多在 z）；關節力矩最大 109 N·m。
+  - 雙機共用工件：總移除 88,426 mm³（fanuc_1 55,812、fanuc_2 6 mm 平刀 32,614）。
+  - 重播改刀具後：單機刀具–工件最深 −6.001 mm = 程式最深（主軸本體離工件 58 mm）、非預期碰撞 0、刀尖追蹤 0.0010 mm；雙機非預期碰撞 0、兩台最小淨空 78.5 mm。
+- **注意**：k_c、關節剛性、刀具長度都是佔位值，數字只能比較趨勢。
+- **下一步**：M8 UI。
+
+## 2026-10-22 ｜ M8：學生操作 UI（viser）
+
+- **做了什麼**：`src/milling_sim/pipeline.py`（plan → Newton 碰撞檢查 → 材料移除，與腳本同演算法）、`src/milling_sim/ui/app.py`（viser：cell／機器人／G-code 上傳／刀具庫與自訂刀具儲存／工件位置／材料／取樣參數／執行／結果／匯出／播放）、`scripts/m8_ui.py`、`docs/UI_GUIDE.md`。
+- **為什麼這樣做**：viser 已在共用環境（Newton 與 cuRobo 的檢視器都用它），不用裝東西；機器人顯示用 URDF visual STL ＋ NumPy FK，Newton 只在執行時做碰撞檢查。
+- **結果**：無頭測試：範例 G-code 從解析到材料移除 16.7 s（碰撞檢查 20 Hz，9.9 s）；結果與腳本一致。瀏覽器截圖在 `outputs/ui/`。

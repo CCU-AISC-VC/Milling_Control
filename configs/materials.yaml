@@ -1,0 +1,11 @@
+# Workpiece materials for the cutting-force estimate (docs/SPEC.md §8). Specific cutting
+# energy k_c [N/mm^2 = J/mm^3] at ~0.1 mm chip thickness; textbook-range reference values,
+# not measured in the lab: UNVERIFIED. Force ratios radial/axial vs tangential are typical
+# end-milling approximations.
+materials:
+  aluminium_6061: {k_c_N_mm2: 700.0,  radial_ratio: 0.4, axial_ratio: 0.25, density_kg_m3: 2700}
+  steel_s45c:     {k_c_N_mm2: 2200.0, radial_ratio: 0.4, axial_ratio: 0.25, density_kg_m3: 7850}
+  pom_plastic:    {k_c_N_mm2: 300.0,  radial_ratio: 0.3, axial_ratio: 0.2,  density_kg_m3: 1410}
+  mdf_wood:       {k_c_N_mm2: 80.0,   radial_ratio: 0.3, axial_ratio: 0.2,  density_kg_m3: 750}
+  foam_pu:        {k_c_N_mm2: 15.0,   radial_ratio: 0.3, axial_ratio: 0.2,  density_kg_m3: 100}
+default: aluminium_6061

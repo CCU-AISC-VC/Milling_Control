@@ -23,6 +23,7 @@ from milling_sim import ASSETS_DIR, OUTPUTS_DIR, REPO_ROOT
 from milling_sim.cell import load_cell
 from milling_sim.gcode import load_gcode
 from milling_sim.ik import IKParams, ToolAxisIK
+from milling_sim.tool import load_tool
 from milling_sim.toolpath import SamplingParams, sample_program
 from milling_sim.traj_io import JointTrajectory, write_trajectory
 from milling_sim.urdf_kinematics import load_chain, quat_xyzw_from_matrix
@@ -47,6 +48,7 @@ def main() -> int:
     ap.add_argument("--accel", type=float, default=1.0)
     ap.add_argument("--rapid-feed", type=float, default=3000.0)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--tool", type=Path, default=None, help="tool YAML (default: the robot's tool in the cell config; none = program the spindle nose)")
     ap.add_argument("--no-newton-check", action="store_true")
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
@@ -57,6 +59,8 @@ def main() -> int:
     rp = cell.robot(args.robot)
     rc = rp.robot
     chain = load_chain(rc.urdf, rc.base_link, rc.tcp_link)
+    tool = load_tool(args.tool) if args.tool else rp.tool
+    tool_length = tool.length_from_nose if tool else 0.0
 
     # --- M1: parse + sample (program frame)
     prog = load_gcode(args.gcode, rapid_feed_mm_min=args.rapid_feed)
@@ -69,7 +73,7 @@ def main() -> int:
     D = (T_bp[:3, :3] @ tp.tool_dir.T).T
 
     # --- IK
-    ik = ToolAxisIK(chain, rc.tool_axis_in_tcp, IKParams(), q_ref=rc.q_ref)
+    ik = ToolAxisIK(chain, rc.tool_axis_in_tcp, IKParams(), q_ref=rc.q_ref, tool_length=tool_length)
     seeds = list(rc.named_states.values())
     t0 = time.perf_counter()
     q0, seed_info = ik.choose_seed(P[0], D[0], seeds, rng=np.random.default_rng(args.seed))
@@ -86,10 +90,10 @@ def main() -> int:
     acc_ratio = np.abs(qdd) / rc.acceleration_limits
     # FK of the solution (independent chain) -> TCP pose columns of the trajectory file
     Tfk = chain.fk_batch(Q)
-    tcp_pos = Tfk[:, :3, 3]
+    axis_fk = np.einsum("nij,j->ni", Tfk[:, :3, :3], ik.a_t)
+    tcp_pos = Tfk[:, :3, 3] + axis_fk * tool_length  # tool tip (= nose when no tool)
     tcp_quat = np.array([quat_xyzw_from_matrix(T) for T in Tfk])
     pos_err_fk = np.linalg.norm(tcp_pos - P, axis=1)
-    axis_fk = np.einsum("nij,j->ni", Tfk[:, :3, :3], ik.a_t)
     dir_err_fk = np.arccos(np.clip(np.einsum("ni,ni->n", axis_fk, D), -1, 1))
 
     newton_check = None
@@ -101,7 +105,7 @@ def main() -> int:
         errs = []
         for i in idx:
             T = scene.fk(args.robot, Q[i], [rc.tcp_link])[rc.tcp_link]
-            errs.append(np.linalg.norm(T[:3, 3] - P[i]))
+            errs.append(np.linalg.norm(T[:3, 3] + (T[:3, :3] @ ik.a_t) * tool_length - P[i]))
         newton_check = {"n_checked": int(len(idx)), "pos_err_max_mm": float(np.max(errs) * 1e3)}
 
     checks = {
@@ -140,6 +144,7 @@ def main() -> int:
         "robot_config": rel(rc.path),
         "urdf": rel(rc.urdf),
         "tool_axis_in_tcp": rc.tool_axis_in_tcp.tolist(),
+        "tool": tool.to_meta() if tool else None,
         "T_base_program": T_bp.round(9).tolist(),
         "sampling": {"max_spacing_mm": args.max_spacing_mm, "chord_tol_mm": args.chord_tol_mm, "accel_m_s2": args.accel, "rapid_feed_mm_min": args.rapid_feed},
         "ik": ik.prm.__dict__,

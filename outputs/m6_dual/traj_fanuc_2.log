@@ -1,0 +1,98 @@
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /home/vc-zephyrus/.cache/warp/1.17.0
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.18 ms  (cached)
+Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.41 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.53 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.50 ms  (cached)
+{
+  "checks": {
+    "ik_pos_err_max_mm": 0.001474593345938678,
+    "ik_dir_err_max_deg": 0.0011458957413531476,
+    "fk_pos_err_max_mm": 0.001474593345938678,
+    "fk_dir_err_max_deg": 0.0011458962361404852,
+    "n_not_converged": 0,
+    "iters_mean": 2.887142857142857,
+    "max_step_deg_per_joint": [
+      0.0486,
+      0.0726,
+      0.0644,
+      0.1549,
+      0.0679,
+      0.124
+    ],
+    "max_step_deg": 0.15489288842508506,
+    "vel_ratio_max_per_joint": [
+      0.0192,
+      0.0343,
+      0.0308,
+      0.0483,
+      0.026,
+      0.0269
+    ],
+    "vel_ratio_max": 0.04830067931275193,
+    "acc_ratio_max_per_joint": [
+      0.0932,
+      0.2493,
+      0.2251,
+      0.2044,
+      0.1032,
+      0.1215
+    ],
+    "limit_margin_min": 0.22899410051923708,
+    "manipulability_min": 0.3870573503239922,
+    "q_range_deg": {
+      "min": [
+        -4.84,
+        -12.6,
+        -47.81,
+        -1.79,
+        34.9,
+        -1.58
+      ],
+      "max": [
+        3.84,
+        0.29,
+        -36.57,
+        1.97,
+        37.08,
+        1.43
+      ]
+    },
+    "newton_fk_check": {
+      "n_checked": 200,
+      "pos_err_max_mm": 0.0013276997091427954
+    },
+    "pass": true,
+    "gate": {
+      "pos_mm": 0.05,
+      "dir_deg": 0.05,
+      "max_step_deg": 5.0,
+      "vel_ratio": 1.0
+    }
+  },
+  "seed": {
+    "seed": 0,
+    "preferred_state": "home",
+    "n_candidates": 82,
+    "n_converged": 37,
+    "n_with_margin": 37,
+    "dist_to_ref_deg": 61.03420442576922,
+    "limit_margin": 0.22899410051923708,
+    "manipulability": 0.3918500173148669,
+    "q0_deg": [
+      -4.842,
+      -12.237,
+      -47.811,
+      0.547,
+      35.575,
+      -0.445
+    ]
+  },
+  "ik_time_s": 6.3,
+  "n_samples": 5600
+}

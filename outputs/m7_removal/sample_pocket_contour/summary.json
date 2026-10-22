@@ -1,0 +1,76 @@
+{
+  "name": "sample_pocket_contour",
+  "cell": "configs/cells/single_robot_table.yaml",
+  "material": {
+    "name": "aluminium_6061",
+    "k_c_N_mm2": 700.0,
+    "radial_ratio": 0.4,
+    "axial_ratio": 0.25
+  },
+  "stock_mm": {
+    "size": [
+      200.0,
+      200.0,
+      50.0
+    ],
+    "center_world": [
+      1.4,
+      0.0,
+      0.725
+    ]
+  },
+  "heightmap": {
+    "resolution_mm": 0.5,
+    "nx": 400,
+    "ny": 400
+  },
+  "removed_volume_total_mm3": 55812.22862005234,
+  "max_depth_mm": 6.000399589538574,
+  "robots": {
+    "fanuc_1": {
+      "tool": {
+        "name": "flat_10mm",
+        "type": "flat",
+        "diameter_mm": 10.0,
+        "flute_length_mm": 25.0,
+        "length_from_nose_mm": 60.0,
+        "shank_diameter_mm": 10.0,
+        "flutes": 2,
+        "max_rpm": 12000.0,
+        "config": null
+      },
+      "removed_volume_mm3": 55812.22654612162,
+      "cutting_time_s": 216.79446144000002,
+      "mrr_max_mm3_s": 451.2266988384562,
+      "mrr_mean_cutting_mm3_s": 270.03880396863207,
+      "force_max_N": 83.37363609244811,
+      "force_mean_cutting_N": 49.92419410890227,
+      "deflection_max_mm": 0.4131043941861332,
+      "deflection_z_max_mm": 0.39332638607429116,
+      "joint_torque_max_Nm": [
+        108.963,
+        98.299,
+        102.238,
+        0.752,
+        24.341,
+        18.25
+      ],
+      "joint_stiffness_Nm_rad": [
+        800000.0,
+        800000.0,
+        600000.0,
+        200000.0,
+        200000.0,
+        100000.0
+      ]
+    }
+  },
+  "trajectories": {
+    "fanuc_1": "outputs/m2_ik/sample_pocket_contour/trajectory"
+  },
+  "pass": true,
+  "env": {
+    "python": "3.12.15",
+    "warp": "1.17.0"
+  }
+}

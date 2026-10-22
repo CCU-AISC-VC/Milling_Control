@@ -13,6 +13,7 @@ import numpy as np
 import yaml
 
 from . import REPO_ROOT
+from .tool import ToolConfig, load_tool
 from .urdf_kinematics import make_transform
 
 
@@ -46,6 +47,7 @@ class RobotPlacement:
     name: str
     robot: RobotConfig
     base_xform: np.ndarray  # 4x4, world <- base
+    tool: ToolConfig | None = None  # cutting tool mounted on the spindle nose
 
 
 @dataclass
@@ -223,7 +225,8 @@ def load_cell(path: str | Path) -> CellConfig:
     robots = []
     for r in d["robots"]:
         cfg = load_robot_config(r["robot"])
-        robots.append(RobotPlacement(r["name"], cfg, make_transform(r.get("base_xyz_m", [0, 0, 0]), r.get("base_rpy_rad", [0, 0, 0]))))
+        tool = load_tool(r["tool"]) if r.get("tool") else (load_tool(d["tool"]["config"]) if isinstance(d.get("tool"), dict) and d["tool"].get("config") else None)
+        robots.append(RobotPlacement(r["name"], cfg, make_transform(r.get("base_xyz_m", [0, 0, 0]), r.get("base_rpy_rad", [0, 0, 0])), tool))
     return CellConfig(
         name=d["name"],
         robots=robots,

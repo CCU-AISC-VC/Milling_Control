@@ -54,6 +54,12 @@ OMNI_KIT_ACCEPT_EULA=YES ~/envs/aisc_sim/bin/python scripts/m3_render_isaacsim.p
 ~/envs/aisc_sim/bin/python scripts/m6_dual_replay.py --traj fanuc_1=outputs/m6_dual/traj_fanuc_1/trajectory --traj fanuc_2=outputs/m6_dual/traj_fanuc_2/trajectory
 OMNI_KIT_ACCEPT_EULA=YES ~/envs/aisc_sim/bin/python scripts/m3_render_isaacsim.py --usd outputs/m6_dual/scene.usd --cell configs/cells/dual_robot_table.yaml --camera overview --frames 300
 
+# M7：材料移除、切削力、偏移
+~/envs/aisc_sim/bin/python scripts/m7_material_removal.py --traj fanuc_1=outputs/m2_ik/sample_pocket_contour/trajectory
+
+# M8：學生 UI（瀏覽器開 http://localhost:8080，指南 docs/UI_GUIDE.md）
+~/envs/aisc_sim/bin/python scripts/m8_ui.py --port 8080
+
 # M4：ROS 2 假硬體播放與比對（需先 colcon build ros2_ws）
 scripts/m4_run_mock_test.sh outputs/m2_ik/unit_square_100mm/trajectory outputs/m4_bridge/mock_unit_square 2.0
 ~/envs/aisc_sim/bin/python scripts/m4_compare_sim_vs_ros.py --session outputs/m4_bridge/mock_unit_square --traj outputs/m2_ik/unit_square_100mm/trajectory
@@ -72,7 +78,9 @@ scripts/m4_run_mock_test.sh outputs/m2_ik/unit_square_100mm/trajectory outputs/m
 | **M3** | Newton 模擬與渲染：cell、運動學重播、碰撞檢查、USD → Isaac Sim RTX 影片 | `outputs/m3_sim/` | 無非預期碰撞；模擬 TCP 與目標路徑相差 < 0.1 mm | ✅ 2026-10-22：0.0012 mm、非預期碰撞 0、RTX 影片 |
 | **M4** | Sim2Real 介面：`milling_bridge` ROS 2 套件、假控制器驗證、joint state 錄製 | `outputs/m4_bridge/` | 同一份檔案在 Newton 與 ros2_control 假硬體的關節曲線一致（< 1e-3 rad） | ✅ 2026-10-22 假硬體：最大誤差 0.00069 rad（補償 10 ms 延遲後 0.00010 rad）；🚧 真機待 FANUC 電腦 |
 | 檢查點 2 | sim2real ready：同一份軌跡檔兩邊都能跑 | | | 🚧 sim 端與假硬體 ✅；真機待驗證 |
-| M5 | 材料移除（選用） | | 使用者決定 | 留到之後 |
+| **M7** | 刀具與材料移除：刀具庫、刀尖 IK 與碰撞體、2.5D 高度圖（Warp）、切削力與靜態偏移估計 | `outputs/m7_removal/` | 直槽體積與解析值差 < 2%；重播 gate 仍通過 | ✅ 2026-10-22：單機 55,812 mm³、雙機 88,426 mm³ |
+| **M8** | 學生操作 UI（viser）：選刀具／上傳 G-code／放工件／一鍵模擬／動畫／匯出 | `scripts/m8_ui.py`、`docs/UI_GUIDE.md` | 照指南不看程式碼能跑完並匯出 | ✅ 2026-10-22 |
+| M5 | 材料移除（選用） | | | 併入 M7 |
 | **M6** | 雙機協作：兩台 M-710iD/70 共用工件各切一端、共用時間軸、機器人間淨空、圍籬與環境、RTX demo | `outputs/m6_dual/` | 各台 TCP 追蹤 < 0.1 mm、無互撞（淨空 > 5 mm）、無非預期碰撞 | ✅ 2026-10-22：追蹤 0.0011 mm、最小淨空 78.5 mm、碰撞 0；工件掛在另一台 TCP 的模式未做 |
 
 Legend: ✅ done · 🚧 in progress · ❌ not started. **這張表是進度的唯一真實來源，每次階段性完成就更新它。**
@@ -81,9 +89,9 @@ Legend: ✅ done · 🚧 in progress · ❌ not started. **這張表是進度的
 
 | 路徑 | 內容 |
 |---|---|
-| `src/milling_sim/` | 共用程式：`gcode.py`、`toolpath.py`（M1）；`cell.py`、`ik.py`、`traj_io.py`（M2）；`sim.py`、`replay.py`（M3／M6 重播與碰撞分類）；`clearance.py`（M6 機器人間淨空）；`urdf_kinematics.py`、`newton_robot.py`、`viz.py`（M0） |
+| `src/milling_sim/` | 共用程式：`gcode.py`、`toolpath.py`（M1）；`cell.py`、`ik.py`、`traj_io.py`（M2）；`sim.py`、`replay.py`（M3／M6 重播與碰撞分類）；`clearance.py`（M6）；`tool.py`、`removal.py`、`cutting.py`（M7）；`pipeline.py`、`ui/app.py`（M8）；`urdf_kinematics.py`、`newton_robot.py`、`viz.py`（M0） |
 | `scripts/` | 一個階段一個腳本；對照表在 `scripts/README.md` |
-| `configs/robots/`、`configs/cells/` | 機器人設定（刀軸、速度比例）、cell 設定（機器人清單、各台程式座標、工件、工作台、圍籬等環境、相機；單機與雙機各一份） |
+| `configs/robots/`、`configs/cells/`、`configs/tools/`、`configs/materials.yaml` | 機器人設定（刀軸、速度比例、關節剛性）、cell 設定（機器人與刀具、程式座標、工件、工作台、圍籬、相機）、刀具庫、材料表 |
 | `assets/fanuc_m710id70_spindle/` | 攤平的 URDF 與網格（由 `scripts/m0_flatten_urdf.py` 產生）；`assets/gcode/` 範例 G-code |
 | `ros2_ws/src/` | 實驗室既有的 `m710id_description_spindle`、`m710id_70_moveit_config`；本專案的 `milling_bridge`（軌跡檔 → `FollowJointTrajectory`、joint state 錄製、假硬體 launch） |
 | `outputs/<階段>/` | 圖、GIF、CSV、`summary.json`（MP4 與 USD 不進 git） |

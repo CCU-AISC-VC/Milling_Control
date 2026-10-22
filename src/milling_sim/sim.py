@@ -16,7 +16,9 @@ from scipy.spatial.transform import Rotation as R
 import newton
 
 from .cell import CellConfig
-from .newton_robot import RobotHandle, add_robot, matrix_from_body_q
+from .newton_robot import RobotHandle, add_robot, matrix_from_body_q, xform_from_matrix
+from .tool import rotation_z_to
+from .urdf_kinematics import load_chain
 
 
 @dataclass
@@ -109,6 +111,23 @@ def build_cell_scene(cell: CellConfig, rigid_contact_max: int = 8192, include_en
         body_link = {v: k for k, v in h.link_body.items()}
         for s in range(s_start, builder.shape_count):
             shape_role[s] = f"{rp.name}/{body_link[builder.shape_body[s]]}"
+        if rp.tool is not None:
+            # cylinder from the spindle nose (tcp frame origin) to the tool tip, attached to the
+            # link that carries the tcp frame; Newton cylinders extend along local Z
+            tcp_link = rp.robot.tcp_link
+            parent = None
+            for link in reversed(load_chain(rp.robot.urdf, rp.robot.base_link, tcp_link).link_names):
+                if link in h.link_body and link != tcp_link and builder.body_mass[h.link_body[link]] > 0:
+                    parent = link
+                    break
+            parent = parent or "spindle_link"
+            T_pl = load_chain(rp.robot.urdf, parent, tcp_link).fk(np.zeros(0))  # parent link <- tcp
+            axis_pl = T_pl[:3, :3] @ rp.robot.tool_axis_in_tcp
+            T_cyl = np.eye(4)
+            T_cyl[:3, :3] = rotation_z_to(axis_pl)
+            T_cyl[:3, 3] = T_pl[:3, 3] + axis_pl * rp.tool.length_from_nose / 2
+            s = builder.add_shape_cylinder(h.link_body[parent], xform=xform_from_matrix(T_cyl), radius=rp.tool.radius, half_height=rp.tool.length_from_nose / 2, label=f"{rp.name}_tool", color=(0.25, 0.25, 0.28))
+            shape_role[s] = f"{rp.name}/tool"
     static: dict[str, int] = {}
     tb = cell.table_box()
     if tb is not None:

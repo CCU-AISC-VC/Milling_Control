@@ -16,8 +16,10 @@
 | `m6_dual_replay.py` | M6 | 多台機器人共用時間軸重播（`--traj robot=dir` 可重複、`--cell`、`--views`、`--video-speed`）：追蹤、機器人間淨空（Warp mesh 查詢）、碰撞分類、三視角 GL 影片、USD | `outputs/m6_dual/`：`replay.csv`、`tracking_clearance.png`、`replay_{overview,closeup,side}.{mp4,gif}`、`frame_*.png`、`scene.usd`、`summary.json` |
 
 `m3_render_isaacsim.py --cell <cell.yaml> --camera <name>`：用 cell 設定重畫圍籬／地板／控制櫃（USD 材質、護板半透明）並用設定檔的相機。
+| `m7_material_removal.py` | M7 | 高度圖材料移除、MRR、切削力、靜態偏移（`--traj robot=dir` 可重複、`--cell`、`--tool`、`--material`、`--resolution-mm`） | `outputs/m7_removal/<name>/`：`heightmap.png`、`surface_3d.png`、`mrr_force_deflection.png`、`removal.csv`、`heightmap_depth_mm.npy`、`summary.json` |
+| `m8_ui.py` | M8 | 學生網頁 UI（viser，`--port`） | 瀏覽器 <http://localhost:8080>；匯出到 `outputs/ui/` |
 
-測試：`~/envs/aisc_sim/bin/python -m unittest discover -s tests -v`
+測試：`~/envs/aisc_sim/bin/python -m unittest discover -s tests -v`（G-code 16 個、材料移除 3 個）
 
 規劃中：
 

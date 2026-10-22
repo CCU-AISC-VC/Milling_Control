@@ -24,3 +24,6 @@ preferred_state: home
 velocity_scale: 0.5
 # Joint acceleration limits (rad/s^2). The URDF has none; placeholder, UNVERIFIED.
 acceleration_limits_rad_s2: [3.0, 3.0, 3.0, 6.0, 6.0, 8.0]
+# Torsional joint stiffness (N m / rad) for the static deflection model (SPEC §8). Order-of-
+# magnitude literature values for large industrial robots; NOT measured: UNVERIFIED.
+joint_stiffness_Nm_rad: [8.0e5, 8.0e5, 6.0e5, 2.0e5, 2.0e5, 1.0e5]

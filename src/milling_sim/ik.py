@@ -69,10 +69,13 @@ def _align_rotvec(a: np.ndarray, d: np.ndarray) -> tuple[np.ndarray, float]:
 
 
 class ToolAxisIK:
-    def __init__(self, chain: SerialChain, tool_axis_in_tcp: np.ndarray, params: IKParams | None = None, q_ref: np.ndarray | None = None):
+    def __init__(self, chain: SerialChain, tool_axis_in_tcp: np.ndarray, params: IKParams | None = None, q_ref: np.ndarray | None = None, tool_length: float = 0.0):
         """``q_ref``: reference posture the free (null-space) motion is pulled toward and that
-        seed selection prefers; defaults to the middle of the joint ranges."""
+        seed selection prefers; defaults to the middle of the joint ranges.
+        ``tool_length``: distance from the chain tip (spindle nose) to the tool tip along the
+        tool axis [m]; the IK positions the tool tip."""
         self.chain = chain
+        self.tool_length = float(tool_length)
         self.a_t = np.asarray(tool_axis_in_tcp, dtype=float)
         self.a_t /= np.linalg.norm(self.a_t)
         self.prm = params or IKParams()
@@ -85,8 +88,13 @@ class ToolAxisIK:
 
     # ---------------------------------------------------------------- helpers
     def tool_pose(self, q: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """(tool tip position, cutter axis direction, nose transform) in the base frame."""
         T = self.chain.fk(q)
-        return T[:3, 3], T[:3, :3] @ self.a_t, T
+        a = T[:3, :3] @ self.a_t
+        return T[:3, 3] + a * self.tool_length, a, T
+
+    def tip_from_nose(self, T_nose: np.ndarray) -> np.ndarray:
+        return T_nose[:3, 3] + (T_nose[:3, :3] @ self.a_t) * self.tool_length
 
     def errors(self, q: np.ndarray, p_des: np.ndarray, d_des: np.ndarray) -> tuple[float, float]:
         p, a, _ = self.tool_pose(q)
@@ -107,15 +115,17 @@ class ToolAxisIK:
         d_des = np.asarray(d_des, dtype=float) / np.linalg.norm(d_des)
         for it in range(1, prm.max_iters + 1):
             T = self.chain.fk(q)
-            p = T[:3, 3]
             a = T[:3, :3] @ self.a_t
+            r = a * self.tool_length  # nose -> tip in the base frame
+            p = T[:3, 3] + r
             e_p = p_des - p
             e_w, ang = _align_rotvec(a, d_des)
             if np.linalg.norm(e_p) < prm.pos_tol and ang < prm.dir_tol:
                 return q, float(np.linalg.norm(e_p)), ang, it - 1, True
             J = self.chain.jacobian(q)
+            Jv = J[:3] - np.cross(r[:, None], J[3:], axis=0) if self.tool_length else J[:3]  # v_tip = v + w x r
             B = _perp_basis(a)
-            Jt = np.vstack([prm.w_pos * J[:3], prm.w_dir * (B.T @ J[3:])])  # 5 x dof
+            Jt = np.vstack([prm.w_pos * Jv, prm.w_dir * (B.T @ J[3:])])  # 5 x dof
             et = np.concatenate([prm.w_pos * e_p, prm.w_dir * (B.T @ e_w)])
             A = Jt.T @ Jt
             A += prm.lm_lambda * (np.diag(np.diag(A)) + np.eye(self.dof))

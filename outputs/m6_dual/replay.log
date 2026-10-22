@@ -5,58 +5,59 @@ Warp 1.17.0 initialized:
      "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
    Kernel cache:
      /home/vc-zephyrus/.cache/warp/1.17.0
-Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.01 ms  (cached)
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.05 ms  (cached)
 Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.41 ms  (cached)
-Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.54 ms  (cached)
-Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.58 ms  (cached)
-Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 0.57 ms  (cached)
-Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.30 ms  (cached)
-Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 0.49 ms  (cached)
-Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 1.89 ms  (cached)
-Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 0.53 ms  (cached)
-Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 2.15 ms  (cached)
-Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 0.51 ms  (cached)
-Module newton._src.geometry.sdf_contact da89deb load on device 'cuda:0' took 0.26 ms  (cached)
-Module sdf_contact_write_contact_to_reducer_False_True_False_True_False_False_False 134bcdf load on device 'cuda:0' took 1.06 ms  (cached)
-Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.41 ms  (cached)
-Module milling_sim.clearance 08164c5 load on device 'cuda:0' took 0.36 ms  (cached)
-Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 3.28 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.55 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.64 ms  (cached)
+Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 0.51 ms  (cached)
+Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.32 ms  (cached)
+Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 0.62 ms  (cached)
+Module narrow_phase_gjk_mpr_True_False_write_contact_support_map_default 828685a load on device 'cuda:0' took 2.13 ms  (cached)
+Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 1.88 ms  (cached)
+Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 0.56 ms  (cached)
+Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 2.13 ms  (cached)
+Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 0.54 ms  (cached)
+Module newton._src.geometry.sdf_contact da89deb load on device 'cuda:0' took 0.25 ms  (cached)
+Module sdf_contact_write_contact_to_reducer_False_True_False_True_False_False_False 134bcdf load on device 'cuda:0' took 1.10 ms  (cached)
+Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.43 ms  (cached)
+Module milling_sim.clearance 08164c5 load on device 'cuda:0' took 0.35 ms  (cached)
+Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 2.04 ms  (cached)
 USD output saved in: /mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/scene_tmp.usd
-Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 1.04 ms  (cached)
-Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 2.18 ms  (cached)
-Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.81 ms  (cached)
-Module newton._src.utils.render f02db3b load on device 'cuda:0' took 0.72 ms  (cached)
+Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 0.45 ms  (cached)
+Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 1.08 ms  (cached)
+Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.64 ms  (cached)
+Module newton._src.utils.render f02db3b load on device 'cuda:0' took 0.44 ms  (cached)
 {
   "n_frames": 18731,
   "sim_hz": 60.0,
-  "replay_time_s": 250.2191987139995,
+  "replay_time_s": 181.14662346800014,
   "per_robot": {
     "fanuc_1": {
-      "tcp_err_max_mm": 0.001064668803632413,
-      "tcp_err_mean_mm": 0.00023459862395531158,
-      "spindle_stock_min_mm": -2.000846486361146,
-      "programmed_max_depth_mm": 6.000640878115331,
-      "expected_deepest_mm": -2.000640878115331,
+      "tcp_err_max_mm": 0.00110308134860545,
+      "tcp_err_mean_mm": 0.0002668851887151711,
+      "spindle_stock_min_mm": -6.000720860566615,
+      "programmed_max_depth_mm": 6.000378233108703,
+      "expected_deepest_mm": -6.000378233108703,
       "duration_s": 240.44307
     },
     "fanuc_2": {
-      "tcp_err_max_mm": 0.0006919535492883322,
-      "tcp_err_mean_mm": 0.00020677334599789488,
-      "spindle_stock_min_mm": -1.0007705826406814,
-      "programmed_max_depth_mm": 5.000291621880459,
-      "expected_deepest_mm": -1.000291621880459,
+      "tcp_err_max_mm": 0.0006570509854741857,
+      "tcp_err_mean_mm": 0.00020927970027342,
+      "spindle_stock_min_mm": -5.000615197988522,
+      "programmed_max_depth_mm": 5.00016632363543,
+      "expected_deepest_mm": -5.00016632363543,
       "duration_s": 312.176927
     }
   },
   "n_unexpected_collision_frames": 0,
   "unexpected_first": [],
-  "robot_robot_min_mm": 78.49524915218353,
+  "robot_robot_min_mm": 78.46925407648087,
   "robot_env_min_mm": null,
-  "other_min_mm": 47.99876598065367,
+  "other_min_mm": 43.99923598924027,
   "penetration_tol_mm": 0.05,
   "robot_robot_method": "warp unsigned mesh queries, vertex-to-surface, coarse meshes subdivided to 10 mm, wrist links J4..spindle; clearance < tol = contact",
   "robot_robot_tol_mm": 5.0,
-  "n_mesh_queries": 62852,
+  "n_mesh_queries": 61080,
   "clearance_every": 2,
   "pass": true,
   "gate": {
@@ -67,22 +68,27 @@ Module newton._src.utils.render f02db3b load on device 'cuda:0' took 0.72 ms  (c
   }
 }
 pair_min_mm (<500 mm): {
- "fanuc_1/J4_link | stock": 128.573,
- "fanuc_1/J4_link | table": 140.679,
- "fanuc_1/J5_link | stock": 97.367,
- "fanuc_1/J5_link | table": 128.285,
- "fanuc_1/J6_link | stock": 101.497,
- "fanuc_1/J6_link | table": 151.497,
- "fanuc_1/spindle_link | fanuc_2/spindle_link": 78.495,
- "fanuc_1/spindle_link | stock": -2.001,
- "fanuc_1/spindle_link | table": 47.999,
- "fanuc_2/J4_link | stock": 127.609,
- "fanuc_2/J4_link | table": 141.091,
- "fanuc_2/J5_link | stock": 99.865,
- "fanuc_2/J5_link | table": 128.484,
- "fanuc_2/J6_link | stock": 102.497,
- "fanuc_2/J6_link | table": 152.497,
- "fanuc_2/spindle_link | stock": -1.001,
- "fanuc_2/spindle_link | table": 48.999
+ "fanuc_1/J4_link | stock": 180.646,
+ "fanuc_1/J5_link | fanuc_1/tool": 177.293,
+ "fanuc_1/J5_link | stock": 156.974,
+ "fanuc_1/J5_link | table": 188.562,
+ "fanuc_1/J6_link | fanuc_1/tool": 157.42,
+ "fanuc_1/J6_link | stock": 161.497,
+ "fanuc_1/spindle_link | fanuc_2/spindle_link": 78.469,
+ "fanuc_1/spindle_link | stock": 57.999,
+ "fanuc_1/spindle_link | table": 107.999,
+ "fanuc_1/tool | stock": -6.001,
+ "fanuc_1/tool | table": 43.999,
+ "fanuc_2/J4_link | stock": 171.568,
+ "fanuc_2/J4_link | table": 191.285,
+ "fanuc_2/J5_link | fanuc_2/tool": 178.937,
+ "fanuc_2/J5_link | stock": 149.173,
+ "fanuc_2/J5_link | table": 178.82,
+ "fanuc_2/J6_link | fanuc_2/tool": 158.887,
+ "fanuc_2/J6_link | stock": 152.497,
+ "fanuc_2/spindle_link | stock": 48.999,
+ "fanuc_2/spindle_link | table": 98.999,
+ "fanuc_2/tool | stock": -5.001,
+ "fanuc_2/tool | table": 44.999
 }
 exit=0

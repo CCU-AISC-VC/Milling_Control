@@ -5,7 +5,8 @@
 >
 > 標記 ⚠️ **UNVERIFIED** 的項目是佔位符或由間接證據推斷的值，必須對照一手來源（FANUC 控制器的 UTOOL／UFRAME、實際量測、CAM 後處理器設定）確認後，才能讓任何要報告的結果依賴它。
 >
-> **Revision: r3（2026-10-22，M6 雙機）**
+> **Revision: r4（2026-10-22，M7 刀具與材料移除）**
+> r3 → r4：§3.5 刀具庫與刀尖定義；§2.2 `robots[].tool`；§8 材料移除、切削力與靜態偏移模型；軌跡檔 `x y z` 改為刀尖位置、`meta.tool`。見 DEVLOG 2026-10-22 M7。
 > r2 → r3：§2.2 cell 設定檔的多程式座標、多工件、環境、相機；§6.2 雙機規則與機器人間淨空的量法。見 DEVLOG 2026-10-22 M6。
 > r1 → r2：§3.2 加主軸網格刀尖與 TCP 的 4 mm 差；§6 加碰撞判定規則；工件原點 z 改為工作台面 + 工件高（0.75）。見 DEVLOG 2026-10-22 M3。
 > r0 → r1：§3.1 加參考姿態；§3.4 IK 參數；§4 加取樣與時間律參數；§5 軌跡檔格式落實到 `traj_io.py`。見 DEVLOG 2026-10-22 M1、M2。
@@ -38,7 +39,7 @@
 
 | 鍵 | 意義 |
 |---|---|
-| `robots[]` | 每台的 `name`、`robot`（robot YAML）、`base_xyz_m`／`base_rpy_rad`（world ← base） |
+| `robots[]` | 每台的 `name`、`robot`（robot YAML）、`base_xyz_m`／`base_rpy_rad`（world ← base）、`tool`（刀具 YAML，§3.5；省略 = 直接以主軸鼻端編程） |
 | `programs.<robot>` | 該台的 G-code `program` frame（`frame` 為 `world` 或 `<robot>_base`，`origin_xyz_m`、`origin_rpy_rad`）。沒有時退回單一的 `workpiece` |
 | `stocks[]` | 實體工件方塊：原點是工件**頂面**角落，方塊沿 +X、+Y、−Z 延伸（`size_xyz_mm`） |
 | `table` | 工作台方塊（`center_xy_m`、`size_xyz_m`、`top_z_m`） |
@@ -100,6 +101,17 @@ M0 驗證（2026-10-22）：Newton `add_urdf` 與獨立 NumPy FK，1000 組隨�
 | 逐點追蹤 | 每點以前一點的解當起點；第一點用參考姿態 ＋ 手腕網格（J4／J6 ∈ {0, ±90°, 180°}，J5 ∈ {−60°, 0, 60°}）＋ 32 個隨機種子 |
 | 通過門檻 | FK(IK) 位置 < 0.05 mm、刀軸 < 0.05°、未收斂 0 點、相鄰樣本關節差 < 5°、關節速度 ≤ 上限 × `velocity_scale` |
 
+### 3.5 刀具（M7，`configs/tools/*.yaml`、`src/milling_sim/tool.py`）
+
+| 項目 | 規定 |
+|---|---|
+| 參考 | `spindle_tcp` 當**主軸鼻端**；刀尖 = 鼻端 + `length_from_nose_mm` × 刀軸（+X） |
+| 欄位 | `name`、`type`（flat／ball）、`diameter_mm`、`flute_length_mm`、`length_from_nose_mm`、`shank_diameter_mm`、`flutes`、`max_rpm` |
+| IK | 目標是刀尖（`ToolAxisIK(tool_length=…)`，刀尖 Jacobian = J_v − [r]× J_ω） |
+| 碰撞與視覺 | Newton 在主軸 link 上加一個鼻端→刀尖的圓柱（角色 `<robot>/tool`），切削段與純退刀時刀具或主軸在工件內都算預期；預期最深 = 程式最深（不再減 4 mm 網格差） |
+| 軌跡檔 | `x y z` 是**刀尖**在 base 的位置；`meta.tool` 記錄刀具；沒有刀具時等於鼻端（與 r3 相容） |
+| 既有刀具 | `flat_10mm`（60 mm）、`flat_6mm`（50 mm）、`ball_8mm`（55 mm）：長度皆為佔位值 ⚠️ UNVERIFIED |
+
 ### 3.3 碰撞模型
 
 URDF 的 collision 網格：手臂各 link 的簡化 STL、主軸用與 visual 相同的 73,334 面 STL。Newton 匯入後 16 個 shape（每個 link visual + collision 各一）。自碰撞檢查預設關閉（M3 再決定）。
@@ -159,6 +171,15 @@ URDF 的 collision 網格：手臂各 link 的簡化 STL、主軸用與 visual �
 | 對齊 | recorder 以 player 的 `main_sent` 時間戳為 0，軌跡時間 = (t − stamp − lead_in) × speed_scale |
 | 假硬體延遲 | 約 10 ms（M4 實測，100 Hz 更新）；比對時掃 ±0.1 s 取最小誤差，原始與補償後都要報告 |
 
+## 8. 材料移除、切削力與靜態偏移（M7）
+
+| 項目 | 模型 |
+|---|---|
+| 材料移除 | 2.5D 高度圖（world XY 格，預設 0.5 mm；`removal.py`，Warp kernel）。每對相鄰切削樣本掃一個半徑 r 的 2D 膠囊，格子高度降到刀底高度（flat：刀尖 z；ball：z + r − √(r² − d²)），取區間內最低點；移除體積用 atomic 累加 → MRR。**沒有**側壁 undercut、切屑、刀具磨耗；高度圖不知道刃長。驗證：直槽解析體積誤差 < 2%、球刀下刀剖面 |
+| 切削力 | 比切削能 k_c（`configs/materials.yaml`，教科書量級 ⚠️ UNVERIFIED）：P = k_c · MRR；v_c = π D n／60；F_t = P／v_c；F_r = 0.4 F_t、F_a = 0.25 F_t（典型比例）。方向：切向沿 −進給、徑向 = z × 進給、軸向 +z（推離工件）。只在有 MRR 的樣本有力 |
+| 靜態偏移 | 關節扭轉彈簧 K = diag(k_j)（`joint_stiffness_Nm_rad`，量級佔位 ⚠️ UNVERIFIED）：C = J K⁻¹ Jᵀ（刀尖 Jacobian），δ = C[:3,:] · [F; 0]；關節力矩 τ = Jᵀ [F; 0]。不含重力、連桿柔性、動態 |
+| 有效範圍 | 只能比較趨勢（哪段路徑負載大、哪個姿態偏移大）；絕對值要等 k_c 與 k_j 量測後才可信 |
+
 ## 7. 模型有效範圍
 
-本平台模擬的是**運動學與幾何**：關節軌跡、TCP 路徑、碰撞、可達性、時間。**不模擬**切削力、主軸負載、工件材料移除（M5 之後選做）、手臂柔性與控制器追蹤誤差。sim 與真機的差異要由 M4 的關節曲線比對量化，不能假設為零。
+本平台模擬的是**運動學與幾何**：關節軌跡、刀尖路徑、碰撞、可達性、時間；M7 之後加上 2.5D 材料移除與一階的切削力／靜態偏移估計（§8）。**不模擬**真實切削物理、主軸動態、手臂動力學與控制器追蹤誤差。sim 與真機的差異要由 M4 的關節曲線比對量化，不能假設為零。
