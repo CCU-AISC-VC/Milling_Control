@@ -157,3 +157,8 @@
   - 校徽：19,080 點全部收斂，誤差 0.0013 mm；材料移除 8,934 mm³、高度圖看得出完整校徽（五瓣梅花、中正二字為留白）、力最大 12 N、偏移 0.04 mm。
   - 重播：第一次兩條都「失敗」——Newton 的圓柱–方塊接觸對細刀具回報 −5 mm（刀尖在工件頂面時）到 −34 mm（深 0.8 mm 時）的假穿透；10 mm 平刀之前剛好給 −6.0 所以沒發現。改成 `replay.tool_box_distance` 解析幾何（SPEC §6）後：五軸刀尖追蹤 0.065 mm（刀軸變化時 60 Hz 內插的誤差，仍 < 0.1 mm）、最深 −5.946 mm 對程式 −5.942 mm、非預期碰撞 0；校徽 58,089 frames、追蹤 0.0011 mm、最深 −0.801 mm、非預期碰撞 0。
   - RTX：`outputs/m3_sim/{sample_5axis_wave,ccu_emblem}/rtx_closeup/`。
+
+## 2026-10-22 ｜ 渲染調整：工件深色霧面、影片放慢
+
+- **使用者回饋**：工件太亮太反光看不到切出來的東西、影片像抽筋（RTX 固定 300 幀跑完整段，等於 24 倍速）、工件要調暗。
+- **做了什麼**：`m3_render_isaacsim.py` 的工件快照改綁自己的 UsdPreviewSurface（預設 diffuse (0.42, 0.38, 0.32)、roughness 0.92、metallic 0，`--stock-color`／`--stock-roughness` 可調）、燈光整體乘 `--light-scale`（預設 0.55）；幀數改為預設「每個 USD 影格一幀」（跟重播的 `--video-speed` 一致），或 `--speed` 指定實時倍率；GL 影片的工件顏色同步調暗。`scripts/render_all_demos.sh`：四個示範場景以 5 倍速（校徽 15 倍）重播並渲染。

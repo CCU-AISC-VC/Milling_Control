@@ -32,7 +32,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--usd", type=Path, default=REPO / "outputs/m3_sim/sample_pocket_contour/scene.usd")
     ap.add_argument("--out", type=Path, default=None)
-    ap.add_argument("--frames", type=int, default=240, help="number of rendered frames (spread over the USD time range)")
+    ap.add_argument("--frames", type=int, default=0, help="number of rendered frames spread over the USD time range (0 = one per USD frame, i.e. the replay's own time-lapse speed)")
+    ap.add_argument("--speed", type=float, default=0.0, help="alternative to --frames: real-time factor of the clip (needs the replay's video_speed from summary.json)")
+    ap.add_argument("--stock-color", type=float, nargs=3, default=(0.42, 0.38, 0.32), help="machined stock diffuse colour (dark matte by default)")
+    ap.add_argument("--stock-roughness", type=float, default=0.92)
+    ap.add_argument("--light-scale", type=float, default=0.55, help="scale on all light intensities (lower = less washed out)")
     ap.add_argument("--width", type=int, default=1280)
     ap.add_argument("--height", type=int, default=720)
     ap.add_argument("--subframes", type=int, default=16, help="RTX path-tracing subframes per frame (quality)")
@@ -93,6 +97,14 @@ def main() -> int:
     snapshot_sets = []  # (time codes, prim paths) per deforming mesh
     usd_to_open = args.usd
     if deforming:
+        stock_mat = UsdShade.Material.Define(stage_in, "/World/stock_snaps_mat")
+        stock_sh = UsdShade.Shader.Define(stage_in, "/World/stock_snaps_mat/shader")
+        stock_sh.CreateIdAttr("UsdPreviewSurface")
+        stock_sh.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*[float(v) for v in args.stock_color]))
+        stock_sh.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(float(args.stock_roughness))
+        stock_sh.CreateInput("metallic", Sdf.ValueTypeNames.Float).Set(0.0)
+        stock_sh.CreateInput("specular", Sdf.ValueTypeNames.Float).Set(0.15)
+        stock_mat.CreateSurfaceOutput().ConnectToSource(stock_sh.ConnectableAPI(), "surface")
         for di, mesh in enumerate(deforming):
             pts_attr = mesh.GetPointsAttr()
             times = list(pts_attr.GetTimeSamples())
@@ -115,12 +127,9 @@ def main() -> int:
                 snap.CreateExtentAttr(UsdGeom.PointBased(snap).ComputeExtent(pts_attr.Get(tc)))
                 if os.environ.get("DEBUG_SNAP_COLOR"):
                     snap.CreateDisplayColorAttr([(1.0, 0.1, 0.1)])
-                elif binding:
-                    UsdShade.MaterialBindingAPI.Apply(snap.GetPrim()).Bind(binding)
-                elif color:
-                    snap.CreateDisplayColorAttr(color)
                 else:
-                    snap.CreateDisplayColorAttr([(0.82, 0.78, 0.64)])
+                    UsdShade.MaterialBindingAPI.Apply(snap.GetPrim()).Bind(stock_mat)
+                    snap.CreateDisplayColorAttr([tuple(float(v) for v in args.stock_color)])
                 # Kit ignores time-sampled visibility and drops most in-session edits, but it does
                 # follow time-sampled transforms (the robots animate that way). So every snapshot
                 # is always visible and parked 1 km below the floor except during [t_i, t_i+1):
@@ -150,13 +159,14 @@ def main() -> int:
     print("STAGE_OPEN_OK", round(time.time() - t0, 1), "s; upAxis", UsdGeom.GetStageUpAxis(stage), flush=True)
 
     # --- lights, ground, materials
-    UsdLux.DomeLight.Define(stage, "/World/milling_dome").CreateIntensityAttr(700.0)
+    ls = float(args.light_scale)
+    UsdLux.DomeLight.Define(stage, "/World/milling_dome").CreateIntensityAttr(700.0 * ls)
     key = UsdLux.DistantLight.Define(stage, "/World/milling_key")
-    key.CreateIntensityAttr(2500.0)
+    key.CreateIntensityAttr(2500.0 * ls)
     key.CreateAngleAttr(1.0)
     UsdGeom.Xformable(key).AddRotateXYZOp().Set(Gf.Vec3f(-50.0, 20.0, 35.0))
     fill = UsdLux.SphereLight.Define(stage, "/World/milling_fill")
-    fill.CreateIntensityAttr(20000.0)
+    fill.CreateIntensityAttr(20000.0 * ls)
     fill.CreateRadiusAttr(0.3)
     UsdGeom.Xformable(fill).AddTranslateOp().Set(Gf.Vec3d(2.5, 1.5, 2.5))
     ground = UsdGeom.Mesh.Define(stage, "/World/milling_ground")
@@ -255,7 +265,17 @@ def main() -> int:
     # Deforming meshes (the progressively machined stock) carry time-sampled `points`; Kit's
     # Fabric scene delegate does not re-read them when the timeline moves, so bake the sample
     # of the current frame into the attribute's default value before each render.
-    n = args.frames
+    n = int(args.frames)
+    if n <= 0:
+        n = int(round(t_end - t_start)) + 1  # one rendered frame per USD frame
+        if args.speed > 0:
+            info_path = args.usd.parent / "summary.json"
+            try:
+                vs = float(json.loads(info_path.read_text()).get("video_speed", 1.0))
+                n = int(round(n * vs / args.speed))  # re-time the clip to the requested real-time factor
+            except Exception:
+                pass
+    print("RENDER_FRAMES", n, flush=True)
     for k in range(n):
         frac = k / max(n - 1, 1)
         tc = float(round(t_start + frac * (t_end - t_start)))  # integer time codes: exact keys

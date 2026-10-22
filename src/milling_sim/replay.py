@@ -199,7 +199,7 @@ def replay(scene: CellScene, cell: CellConfig, trajs: dict[str, JointTrajectory]
 
 
 # ---------------------------------------------------------------------------- machined stock
-STOCK_COLOR = (0.82, 0.78, 0.64)
+STOCK_COLOR = (0.50, 0.46, 0.40)  # dark matte (user feedback: bright stock hid the cut features)
 
 
 class StockEvolver:
