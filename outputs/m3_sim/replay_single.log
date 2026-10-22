@@ -1,1 +1,89 @@
 === 22:10:05 /home/vc-zephyrus/envs/aisc_sim/bin/python scripts/m3_sim_replay.py --traj outputs/m2_ik/sample_pocket_contour/trajectory --video-speed 5
+Warp 1.17.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5090 Laptop GPU" (23 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /home/vc-zephyrus/.cache/warp/1.17.0
+Module newton._src.geometry.inertia 060c986 load on device 'cuda:0' took 1.07 ms  (cached)
+Module validate_and_correct_inertia_kernel_1ff2ac62 1ff2ac6 load on device 'cuda:0' took 0.48 ms  (cached)
+Module newton._src.geometry.bvh 58a3a49 load on device 'cuda:0' took 0.75 ms  (cached)
+Module create_eval_articulation_fk_tile__locals__eval_articulation_fk_tile_37579831 5768819 load on device 'cuda:0' took 0.55 ms  (cached)
+Module newton._src.sim.collide 56e960b load on device 'cuda:0' took 0.56 ms  (cached)
+Module newton._src.geometry.broad_phase_nxn 0c4afcd load on device 'cuda:0' took 0.33 ms  (cached)
+Module narrow_phase_primitive_write_contact_False_False_False 6b2fd5c load on device 'cuda:0' took 0.52 ms  (cached)
+Module narrow_phase_gjk_mpr_True_False_write_contact_support_map_default 828685a load on device 'cuda:0' took 2.15 ms  (cached)
+Module newton._src.geometry.narrow_phase 5f08bfe load on device 'cuda:0' took 1.85 ms  (cached)
+Module newton._src.geometry.contact_reduction_global 3aefb0e load on device 'cuda:0' took 0.61 ms  (cached)
+Module mesh_triangle_contacts_to_reducer_kernel_689f3a91 da62fe3 load on device 'cuda:0' took 2.05 ms  (cached)
+Module newton._src.geometry.contact_reduction_global c36c6c0 load on device 'cuda:0' took 0.66 ms  (cached)
+Module export_reduced_contacts_write_contact c09a53f load on device 'cuda:0' took 0.40 ms  (cached)
+Module newton._src.viewer.kernels 110772f load on device 'cuda:0' took 2.03 ms  (cached)
+Module newton._src.utils.mesh 92b663b load on device 'cpu' took 0.84 ms  (cached)
+Module milling_sim.removal daefc16 load on device 'cuda:0' took 0.44 ms  (cached)
+USD output saved in: /mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/scene_tmp.usd
+Module newton._src.viewer.gl.opengl 5fededf load on device 'cuda:0' took 0.46 ms  (cached)
+Module newton._src.geometry.raycast 50212d9 load on device 'cuda:0' took 0.97 ms  (cached)
+Module warp.utils 1de54f6 load on device 'cuda:0' took 0.55 ms  (cached)
+Module newton._src.utils.mesh b7d1752 load on device 'cuda:0' took 0.77 ms  (cached)
+Module newton._src.viewer.viewer_gl 0550734 load on device 'cuda:0' took 0.60 ms  (cached)
+Module newton._src.utils.render f02db3b load on device 'cuda:0' took 0.35 ms  (cached)
+{
+  "checks": {
+    "n_frames": 14427,
+    "sim_hz": 60.0,
+    "replay_time_s": 29.726373268000316,
+    "tcp_err_max_mm": 0.0010106326720965776,
+    "tcp_err_mean_mm": 0.00027081820595825184,
+    "n_unexpected_collision_frames": 0,
+    "unexpected_first": [],
+    "spindle_stock_min_mm": -6.000489256247965,
+    "programmed_max_depth_mm": 6.000381091649748,
+    "expected_deepest_mm": -6.000381091649748,
+    "tool": {
+      "name": "flat_10mm",
+      "type": "flat",
+      "diameter_mm": 10.0,
+      "flute_length_mm": 25.0,
+      "length_from_nose_mm": 60.0,
+      "shank_diameter_mm": 10.0,
+      "flutes": 2,
+      "max_rpm": 12000.0,
+      "config": "configs/tools/flat_10mm.yaml"
+    },
+    "other_pairs_min_mm": 107.99907754130872,
+    "robot_env_min_mm": null,
+    "penetration_tol_mm": 0.05,
+    "pass": true,
+    "gate": {
+      "tcp_err_mm": 0.1,
+      "unexpected": 0,
+      "depth_tol_mm": 1.0
+    }
+  },
+  "pair_min_mm": {
+    "fanuc_1/J4_link | stock": 180.699,
+    "fanuc_1/J5_link | stock": 156.986,
+    "fanuc_1/J5_link | table": 187.869,
+    "fanuc_1/J6_link | stock": 161.497,
+    "fanuc_1/spindle_link | stock": 57.999,
+    "fanuc_1/spindle_link | table": 107.999,
+    "fanuc_1/tool | stock": -6.0,
+    "fanuc_1/tool | table": 44.0
+  },
+  "media": {
+    "usd": "outputs/m3_sim/sample_pocket_contour/scene.usd",
+    "usd_frames": 1444,
+    "overview": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.gif",
+      "frames": 1444
+    },
+    "closeup": {
+      "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.mp4",
+      "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.gif",
+      "frames": 1444
+    }
+  }
+}

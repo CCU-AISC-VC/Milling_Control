@@ -15,12 +15,12 @@
   "checks": {
     "n_frames": 18731,
     "sim_hz": 60.0,
-    "replay_time_s": 245.49126626100042,
+    "replay_time_s": 163.08228925100047,
     "per_robot": {
       "fanuc_1": {
         "tcp_err_max_mm": 0.00110308134860545,
         "tcp_err_mean_mm": 0.0002668851887151711,
-        "spindle_stock_min_mm": -6.000720860566615,
+        "spindle_stock_min_mm": -6.000634837834418,
         "programmed_max_depth_mm": 6.000378233108703,
         "expected_deepest_mm": -6.000378233108703,
         "duration_s": 240.44307
@@ -28,7 +28,7 @@
       "fanuc_2": {
         "tcp_err_max_mm": 0.0006570509854741857,
         "tcp_err_mean_mm": 0.00020927970027342,
-        "spindle_stock_min_mm": -5.000615197988522,
+        "spindle_stock_min_mm": -5.000442010934081,
         "programmed_max_depth_mm": 5.00016632363543,
         "expected_deepest_mm": -5.00016632363543,
         "duration_s": 312.176927
@@ -38,13 +38,11 @@
     "unexpected_first": [],
     "robot_robot_min_mm": 78.46925407648087,
     "robot_env_min_mm": null,
-    "other_min_mm": 43.99923598924027,
+    "other_min_mm": 98.9990977970769,
     "pair_min_mm": {
       "fanuc_1/J4_link | stock": 180.646,
-      "fanuc_1/J5_link | fanuc_1/tool": 177.293,
       "fanuc_1/J5_link | stock": 156.974,
       "fanuc_1/J5_link | table": 188.562,
-      "fanuc_1/J6_link | fanuc_1/tool": 157.42,
       "fanuc_1/J6_link | stock": 161.497,
       "fanuc_1/spindle_link | fanuc_2/spindle_link": 78.469,
       "fanuc_1/spindle_link | stock": 57.999,
@@ -53,15 +51,13 @@
       "fanuc_1/tool | table": 43.999,
       "fanuc_2/J4_link | stock": 171.568,
       "fanuc_2/J4_link | table": 191.285,
-      "fanuc_2/J5_link | fanuc_2/tool": 178.937,
       "fanuc_2/J5_link | stock": 149.173,
       "fanuc_2/J5_link | table": 178.82,
-      "fanuc_2/J6_link | fanuc_2/tool": 158.887,
       "fanuc_2/J6_link | stock": 152.497,
       "fanuc_2/spindle_link | stock": 48.999,
       "fanuc_2/spindle_link | table": 98.999,
-      "fanuc_2/tool | stock": -5.001,
-      "fanuc_2/tool | table": 44.999
+      "fanuc_2/tool | stock": -5.0,
+      "fanuc_2/tool | table": 45.0
     },
     "penetration_tol_mm": 0.05,
     "robot_robot_method": "warp unsigned mesh queries, vertex-to-surface, coarse meshes subdivided to 10 mm, wrist links J4..spindle; clearance < tol = contact",
@@ -78,24 +74,24 @@
   },
   "media": {
     "usd": "outputs/m6_dual/scene.usd",
-    "usd_frames": 938,
+    "usd_frames": 1874,
     "overview": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_overview.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_overview.gif",
-      "frames": 938
+      "frames": 1874
     },
     "closeup": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_closeup.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_closeup.gif",
-      "frames": 938
+      "frames": 1874
     },
     "side": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_side.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/replay_side.gif",
-      "frames": 938
+      "frames": 1874
     }
   },
-  "video_speed": 10.0,
+  "video_speed": 5.0,
   "env": {
     "python": "3.12.15",
     "newton": "1.7.0.dev0"

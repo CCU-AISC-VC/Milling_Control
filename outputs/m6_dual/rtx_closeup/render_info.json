@@ -1,9 +1,9 @@
 {
   "usd": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/scene.usd",
-  "frames": 300,
+  "frames": 1874,
   "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m6_dual/rtx_closeup/render_closeup.mp4",
   "width": 1280,
   "height": 720,
-  "subframes": 16,
-  "render_time_s": 126.6
+  "subframes": 8,
+  "render_time_s": 371.7
 }

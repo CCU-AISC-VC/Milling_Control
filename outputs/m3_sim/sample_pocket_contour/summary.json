@@ -6,12 +6,12 @@
   "checks": {
     "n_frames": 14427,
     "sim_hz": 60.0,
-    "replay_time_s": 29.791421427999012,
+    "replay_time_s": 29.726373268000316,
     "tcp_err_max_mm": 0.0010106326720965776,
     "tcp_err_mean_mm": 0.00027081820595825184,
     "n_unexpected_collision_frames": 0,
     "unexpected_first": [],
-    "spindle_stock_min_mm": -6.000599863015661,
+    "spindle_stock_min_mm": -6.000489256247965,
     "programmed_max_depth_mm": 6.000381091649748,
     "expected_deepest_mm": -6.000381091649748,
     "tool": {
@@ -25,19 +25,17 @@
       "max_rpm": 12000.0,
       "config": "configs/tools/flat_10mm.yaml"
     },
-    "other_pairs_min_mm": 43.99944125353163,
+    "other_pairs_min_mm": 107.99907754130872,
     "robot_env_min_mm": null,
     "pair_min_mm": {
       "fanuc_1/J4_link | stock": 180.699,
-      "fanuc_1/J5_link | fanuc_1/tool": 177.3,
       "fanuc_1/J5_link | stock": 156.986,
       "fanuc_1/J5_link | table": 187.869,
-      "fanuc_1/J6_link | fanuc_1/tool": 157.42,
       "fanuc_1/J6_link | stock": 161.497,
       "fanuc_1/spindle_link | stock": 57.999,
       "fanuc_1/spindle_link | table": 107.999,
-      "fanuc_1/tool | stock": -6.001,
-      "fanuc_1/tool | table": 43.999
+      "fanuc_1/tool | stock": -6.0,
+      "fanuc_1/tool | table": 44.0
     },
     "penetration_tol_mm": 0.05,
     "pass": true,
@@ -49,19 +47,19 @@
   },
   "media": {
     "usd": "outputs/m3_sim/sample_pocket_contour/scene.usd",
-    "usd_frames": 723,
+    "usd_frames": 1444,
     "overview": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_overview.gif",
-      "frames": 723
+      "frames": 1444
     },
     "closeup": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_pocket_contour/replay_closeup.gif",
-      "frames": 723
+      "frames": 1444
     }
   },
-  "video_speed": 10.0,
+  "video_speed": 5.0,
   "env": {
     "python": "3.12.15",
     "newton": "1.7.0.dev0"

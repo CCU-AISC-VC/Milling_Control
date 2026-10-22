@@ -6,7 +6,7 @@
   "checks": {
     "n_frames": 22320,
     "sim_hz": 60.0,
-    "replay_time_s": 102.40147386800163,
+    "replay_time_s": 54.87093716399977,
     "tcp_err_max_mm": 0.06510918543295886,
     "tcp_err_mean_mm": 0.005024010563274338,
     "n_unexpected_collision_frames": 0,
@@ -49,19 +49,19 @@
   },
   "media": {
     "usd": "outputs/m3_sim/sample_5axis_wave/scene.usd",
-    "usd_frames": 1117,
+    "usd_frames": 2233,
     "overview": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_overview.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_overview.gif",
-      "frames": 1117
+      "frames": 2233
     },
     "closeup": {
       "mp4": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_closeup.mp4",
       "gif": "/mnt/Robotics/Github_Dev_workspace/Milling_Control/outputs/m3_sim/sample_5axis_wave/replay_closeup.gif",
-      "frames": 1117
+      "frames": 2233
     }
   },
-  "video_speed": 10.0,
+  "video_speed": 5.0,
   "env": {
     "python": "3.12.15",
     "newton": "1.7.0.dev0"
